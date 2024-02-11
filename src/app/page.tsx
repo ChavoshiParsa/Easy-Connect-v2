@@ -1,6 +1,10 @@
 import Link from 'next/link';
+// import { genSaltSync, hashSync } from 'bcrypt-ts';
 
 export default function IntroductionPage() {
+  //   const salt = genSaltSync(10);
+  //   const hash = hashSync('490118241', salt);
+  //   console.log(hash);
   return (
     <main className='flex flex-col items-center justify-center'>
       <div className='flex items-center justify-center space-x-2 self-end'>

@@ -1,8 +1,14 @@
 'use client';
 
+import { useFormState, useFormStatus } from 'react-dom';
+import { authenticate } from '@/lib/actions';
+
 export default function SignInPage() {
+  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const { pending } = useFormStatus();
+
   return (
-    <form action={() => {}} className='space-y-3'>
+    <form action={dispatch} className='space-y-3'>
       <div className='flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8'>
         <h1 className='mb-3 text-2xl'>Please log in to continue.</h1>
         <div className='w-full'>
@@ -44,12 +50,18 @@ export default function SignInPage() {
             </div>
           </div>
         </div>
-        <button className='mt-4 w-full'>Log in</button>
+        <button className='mt-4 w-full' aria-disabled={pending}>
+          Log in
+        </button>
         <div
           className='flex h-8 items-end space-x-1'
           aria-live='polite'
           aria-atomic='true'
-        ></div>
+        >
+          {errorMessage && (
+            <p className='text-sm text-red-500'>{errorMessage}</p>
+          )}
+        </div>
       </div>
     </form>
   );

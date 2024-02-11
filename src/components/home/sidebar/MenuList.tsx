@@ -3,6 +3,7 @@ import Icon from '@/components/ui/Icon';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useContextProvider } from '@/context/store';
+import { logout } from '@/lib/actions';
 
 export default function MenuList() {
   const path = usePathname();
@@ -16,8 +17,8 @@ export default function MenuList() {
       <Link
         className='flex w-full items-center justify-start space-x-6 hover:bg-indigo-100 dark:hover:bg-indigo-950'
         style={{
-          background: `${path.includes('/home') && '#e9e5ffaa'}`,
-          borderRight: `${path.includes('/home') && '#6A4DFF solid 3px'}`,
+          background: `${path === '/home' && '#e9e5ffaa'}`,
+          borderRight: `${path === '/home' && '#6A4DFF solid 3px'}`,
         }}
         href='/home'
         onClick={() => setIsMenuOpen(false)}
@@ -25,10 +26,10 @@ export default function MenuList() {
         <Icon
           name='home'
           size={size}
-          color={`${path.includes('/home') ? '#6A4DFF' : ''}`}
+          color={`${path === '/home' ? '#6A4DFF' : ''}`}
           dark={isDark}
         />
-        <span style={{ color: `${path.includes('/home') && '#6A4DFF'}` }}>
+        <span style={{ color: `${path === '/home' && '#6A4DFF'}` }}>
           Home Page
         </span>
       </Link>
@@ -149,7 +150,10 @@ export default function MenuList() {
           </div>
         )}
       </div>
-      <form className='mb-8 mt-auto flex w-full items-center justify-start hover:bg-rose-200 dark:hover:bg-rose-950'>
+      <form
+        className='mb-8 mt-auto flex w-full items-center justify-start hover:bg-rose-200 dark:hover:bg-rose-950'
+        action={logout}
+      >
         <button className='flex w-full items-center justify-start space-x-6'>
           <Icon name='logout' size={size} color='#E45758' />
           <span className='text-lg text-fire '>Log out</span>
