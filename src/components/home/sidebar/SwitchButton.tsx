@@ -12,6 +12,7 @@ export default function SwitchButton() {
         justifyContent: `${isDark ? 'flex-end' : 'flex-start'}`,
         backgroundColor: `${isDark ? '#9782ff' : '#9ca3af'}`,
       }}
+      type='button'
       onClick={() => setIsDark((prev) => !prev)}
     >
       <span className='z-20 mx-px flex h-4 w-4 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800'>

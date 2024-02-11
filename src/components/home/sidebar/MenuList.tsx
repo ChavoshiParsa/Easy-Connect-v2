@@ -55,25 +55,6 @@ export default function MenuList() {
           2
         </span>
       </Link>
-      <Link
-        className='flex w-full items-center justify-start space-x-6 hover:bg-indigo-100 dark:hover:bg-indigo-950'
-        style={{
-          background: `${path === '/about-us' && '#e9e5ffaa'}`,
-          borderRight: `${path === '/about-us' && '#6A4DFF solid 3px'}`,
-        }}
-        href='/about-us'
-        onClick={() => setIsMenuOpen(false)}
-      >
-        <Icon
-          name='about-us'
-          size={size}
-          color={`${path === '/about-us' ? '#6A4DFF' : ''}`}
-          dark={isDark}
-        />
-        <span style={{ color: `${path === '/about-us' && '#6A4DFF'}` }}>
-          About Us
-        </span>
-      </Link>
       <div
         className='w-full space-y-4 hover:bg-indigo-100 dark:hover:bg-indigo-950'
         style={{

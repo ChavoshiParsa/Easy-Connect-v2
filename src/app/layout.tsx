@@ -16,7 +16,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang='en'>
-      <body className={inter.className}>
+      <body className={inter.className + ' transition-all duration-500'}>
         <ContextProvider>
           <NextTopLoader color='#6A4DFF' />
           {children}
