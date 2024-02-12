@@ -6,13 +6,13 @@ import Image from 'next/image';
 import { useContextProvider } from '@/context/store';
 import SwitchButton from '@/components/home/sidebar/SwitchButton';
 import Icon from '@/components/ui/Icon';
-import { useRef, useState } from 'react';
+import { MouseEventHandler, useRef, useState } from 'react';
+import Link from 'next/link';
 
 export default function SignInPage() {
   const { isDark } = useContextProvider();
 
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
-  const { pending } = useFormStatus();
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -21,15 +21,16 @@ export default function SignInPage() {
   const [passwordError, setPasswordError] = useState('');
 
   const [validate, setValidate] = useState(false);
+
   return (
     <form
       action={dispatch}
-      className='relative flex h-full w-full items-center justify-center overflow-scroll p-3 md:p-4'
+      className='relative flex h-full w-full items-center justify-center overflow-scroll bg-slate-50 p-1 dark:bg-zinc-900 md:p-3'
       noValidate
     >
       <div className='relative hidden h-full w-1/2 overflow-hidden rounded-3xl md:block'>
         <Image
-          className='object-cover'
+          className='object-cover object-center'
           src={
             isDark ? '/images/sign-in-dark.jpg' : '/images/sign-in-light.jpg'
           }
@@ -38,7 +39,7 @@ export default function SignInPage() {
         />
       </div>
 
-      <div className='flex h-full w-full flex-col items-center justify-start md:w-1/2 md:pl-4'>
+      <div className='xs:w-11/12 xs:px-2 flex h-full w-full flex-col items-center justify-between px-2.5 pb-28 pt-16 sm:w-2/3 sm:px-4 md:w-1/2 md:px-6 lg:px-10 xl:px-16'>
         <div className='flex w-full items-center justify-between'>
           <span className='animate-pulse text-xl font-bold text-purlue dark:text-purlue-dark'>
             Easy Connect
@@ -46,17 +47,17 @@ export default function SignInPage() {
           <SwitchButton />
         </div>
 
-        <h1 className='my-20 text-center text-[44px] leading-snug md:my-24 lg:text-6xl'>
+        <h1 className='xs:text-4xl text-3xl lg:text-5xl xl:text-6xl'>
           Welcome Back!
         </h1>
 
-        <div className='mb-32 flex w-full flex-col items-center justify-center space-y-8 sm:w-4/5'>
+        <div className='flex w-full flex-col items-center justify-center space-y-8'>
           <div className='relative w-full'>
             <div className='absolute left-3 top-3'>
               <Icon name='email' size={24} color='#94a3b8' dark={isDark} />
             </div>
             <input
-              className='mb-1 w-full rounded-lg border border-slate-200 bg-slate-100 px-12 py-3 outline-none dark:border-slate-700 dark:bg-zinc-800'
+              className='w-full rounded-lg border border-slate-200 bg-slate-100 py-3 pl-12 pr-4 outline-none dark:border-slate-700 dark:bg-zinc-800'
               placeholder='Email'
               type='email'
               name='email'
@@ -79,7 +80,7 @@ export default function SignInPage() {
               <Icon name='password' size={24} color='#94a3b8' dark={isDark} />
             </div>
             <input
-              className='mb-1 w-full rounded-lg border border-slate-200 bg-slate-100 px-12 py-3 outline-none dark:border-slate-700 dark:bg-zinc-800'
+              className='w-full rounded-lg border border-slate-200 bg-slate-100 py-3 pl-12 pr-4 outline-none dark:border-slate-700 dark:bg-zinc-800'
               placeholder='password'
               type='password'
               name='password'
@@ -98,21 +99,44 @@ export default function SignInPage() {
             )}
           </div>
         </div>
-
-        <button
-          className='w-full rounded-lg bg-gradient-to-r from-indigo-700 to-indigo-500 py-2 text-xl text-slate-100 disabled:text-rose-500 sm:w-4/5'
+        <Button
           onClick={() => {
             setValidate(true);
             setEmailError(emailRef.current?.validationMessage || '');
             setPasswordError(passwordRef.current?.validationMessage || '');
           }}
-          disabled={validate && (!!emailError || !!passwordError || pending)}
-        >
-          Login
-        </button>
-        {pending && <p>wait...</p>}
-        {errorMessage && <p>{errorMessage}</p>}
+          disabled={!!emailError || !!passwordError}
+          validate={validate}
+        />
+        <Link className='self-start' href='/sign-up'>
+          Don&apos;t have an account?{' '}
+          <span className='font-bold text-purlue dark:text-purlue-dark'>
+            Sign up
+          </span>
+        </Link>
       </div>
     </form>
   );
 }
+
+const Button = ({
+  onClick,
+  disabled,
+  validate,
+}: {
+  onClick: MouseEventHandler<HTMLButtonElement>;
+  disabled: boolean;
+  validate: boolean;
+}) => {
+  const { pending } = useFormStatus();
+
+  return (
+    <button
+      className='w-full rounded-lg bg-gradient-to-r from-indigo-700 to-indigo-500 py-2.5 text-xl text-slate-100'
+      onClick={onClick}
+      disabled={validate && (disabled || pending)}
+    >
+      {!pending ? 'Login' : 'Submitting...'}
+    </button>
+  );
+};
