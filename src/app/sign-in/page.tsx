@@ -2,13 +2,13 @@
 
 import { useFormState } from 'react-dom';
 import { authenticate } from '@/lib/actions';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitButton } from '@/components/login/SubmitButton';
 import Header from '@/components/login/Header';
 import Input from '@/components/login/Input';
 import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
-// import Link from 'next/link';
+import { useContextProvider } from '@/context/store';
 
 export default function SignInPage() {
   const [errorMessage, dispatch] = useFormState(authenticate, undefined);
@@ -20,6 +20,17 @@ export default function SignInPage() {
   const [passwordError, setPasswordError] = useState('');
 
   const [validate, setValidate] = useState(false);
+
+  const { setNotification } = useContextProvider();
+
+  useEffect(() => {
+    console.log(errorMessage);
+    if (errorMessage)
+      setNotification({
+        status: 'Error',
+        message: errorMessage,
+      });
+  }, [errorMessage]);
 
   return (
     <form

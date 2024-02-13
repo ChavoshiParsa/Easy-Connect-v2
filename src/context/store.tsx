@@ -9,11 +9,18 @@ import {
   useState,
 } from 'react';
 
+type Notification = {
+  status: 'Success' | 'Error' | 'Info' | 'Warning';
+  message: string;
+};
+
 type ContextType = {
   isMenuOpen: boolean;
   setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
   isDark: boolean;
   setIsDark: Dispatch<SetStateAction<boolean>>;
+  notification: Notification | null;
+  setNotification: Dispatch<SetStateAction<Notification | null>>;
 };
 
 const Context = createContext<ContextType>({
@@ -21,6 +28,8 @@ const Context = createContext<ContextType>({
   setIsMenuOpen: () => {},
   isDark: false,
   setIsDark: () => {},
+  notification: null,
+  setNotification: () => {},
 });
 
 let firstTime = true;
@@ -30,6 +39,7 @@ export const ContextProvider: React.FC<{
 }> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isDark, setIsDark] = useState<boolean>(false);
+  const [notification, setNotification] = useState<Notification | null>(null);
 
   useEffect(() => {
     if (firstTime) {
@@ -69,6 +79,8 @@ export const ContextProvider: React.FC<{
         setIsMenuOpen,
         isDark,
         setIsDark,
+        notification,
+        setNotification,
       }}
     >
       {children}
