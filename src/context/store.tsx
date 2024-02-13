@@ -23,6 +23,8 @@ const Context = createContext<ContextType>({
   setIsDark: () => {},
 });
 
+let firstTime = true;
+
 export const ContextProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
@@ -30,12 +32,19 @@ export const ContextProvider: React.FC<{
   const [isDark, setIsDark] = useState<boolean>(false);
 
   useEffect(() => {
+    if (firstTime) {
+      setIsDark(localStorage.theme === 'dark');
+      firstTime = false;
+    }
+
     if (isDark) {
+      localStorage.theme = 'dark';
       document.documentElement.classList.add('dark');
     } else {
+      localStorage.theme = 'light';
       document.documentElement.classList.remove('dark');
     }
-  }, [isDark]);
+  }, [isDark, setIsDark]);
 
   function handleResize() {
     if (window.innerWidth > 1024) setIsMenuOpen(false);
