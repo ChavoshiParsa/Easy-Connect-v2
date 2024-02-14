@@ -42,6 +42,16 @@ export const ContextProvider: React.FC<{
   const [notification, setNotification] = useState<Notification | null>(null);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [notification]);
+
+  useEffect(() => {
     if (firstTime) {
       setIsDark(localStorage.theme === 'dark');
       firstTime = false;

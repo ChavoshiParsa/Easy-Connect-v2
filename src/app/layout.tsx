@@ -1,10 +1,9 @@
+import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Varela_Round } from 'next/font/google';
-import '@/styles/globals.css';
 import { ContextProvider } from '@/context/store';
 import NextTopLoader from 'nextjs-toploader';
 import Alert from '@/components/ui/Alert';
-// import Modal from '@/components/ui/Modal';
 
 const inter = Varela_Round({ subsets: ['latin'], weight: '400' });
 
@@ -23,7 +22,6 @@ export default function RootLayout({
           <NextTopLoader color='#6A4DFF' />
           <Alert />
           {children}
-          {/* <Modal /> */}
         </ContextProvider>
       </body>
     </html>

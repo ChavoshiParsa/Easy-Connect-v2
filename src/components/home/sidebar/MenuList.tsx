@@ -1,16 +1,28 @@
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
-import { useState } from 'react';
-import { usePathname } from 'next/navigation';
+import { FormEvent, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { useContextProvider } from '@/context/store';
 import { logout } from '@/lib/actions';
+
+const SIZE = 20;
 
 export default function MenuList() {
   const path = usePathname();
   const [isSettingOpen, setIsSettingOpen] = useState(true);
-  const { isDark, setIsMenuOpen } = useContextProvider();
+  const { isDark, setIsMenuOpen, setNotification } = useContextProvider();
 
-  const size = 20;
+  const router = useRouter();
+
+  async function logoutSubmitHandler(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    await logout();
+    setNotification({
+      status: 'Success',
+      message: 'Logout successful! See you later, [Name].',
+    });
+    router.push('/sign-in');
+  }
 
   return (
     <div className='flex h-full w-full flex-col items-center justify-start text-base children:py-3 children:pl-8'>
@@ -25,7 +37,7 @@ export default function MenuList() {
       >
         <Icon
           name='home'
-          size={size}
+          size={SIZE}
           color={`${path === '/home' ? '#6A4DFF' : ''}`}
           dark={isDark}
         />
@@ -44,7 +56,7 @@ export default function MenuList() {
       >
         <Icon
           name='messages'
-          size={size}
+          size={SIZE}
           color={`${path === '/home/messages' ? '#6A4DFF' : ''}`}
           dark={isDark}
         />
@@ -68,7 +80,7 @@ export default function MenuList() {
         >
           <Icon
             name='settings'
-            size={size}
+            size={SIZE}
             color={`${path.includes('/home/settings') ? '#6A4DFF' : ''}`}
             dark={isDark}
           />
@@ -133,10 +145,10 @@ export default function MenuList() {
       </div>
       <form
         className='mb-8 mt-auto flex w-full items-center justify-start hover:bg-rose-200 dark:hover:bg-rose-950'
-        action={logout}
+        onSubmit={logoutSubmitHandler}
       >
         <button className='flex w-full items-center justify-start space-x-6'>
-          <Icon name='logout' size={size} color='#E45758' />
+          <Icon name='logout' size={SIZE} color='#E45758' />
           <span className='text-lg text-fire '>Log out</span>
         </button>
       </form>
