@@ -4,7 +4,6 @@ import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import { prisma } from '../../prisma/prisma';
 import { z } from 'zod';
-import { hashSync } from 'bcrypt-ts';
 
 export async function logout() {
   await signOut();
@@ -38,23 +37,34 @@ export async function register(formData: { email: string; password: string }) {
       })
       .safeParse(formData);
 
-    console.log(parsedCredentials);
-
     if (parsedCredentials.success) {
       const { email, password } = parsedCredentials.data;
-      const hashedPass = hashSync(password);
-      const user = await prisma.user.create({
-        data: {
+
+      const user = await prisma.user.findUnique({
+        where: {
           email,
-          password: hashedPass,
-          fist_name: 'Parsa',
-          username: Math.random().toString(),
         },
       });
-      console.log(user);
-    } else return 'please enter real email';
+      if (user) {
+        return "You've already registered with this email. Try sign in?";
+      }
+    } else return 'Please provide valid credentials.';
   } catch (error: any) {
     return error.toString();
   }
-  return await authenticate(formData);
 }
+// return await authenticate(formData);
+
+// if (parsedCredentials.success) {
+//   const { email, password } = parsedCredentials.data;
+//   const hashedPass = hashSync(password);
+//   const user = await prisma.user.create({
+//     data: {
+//       email,
+//       password: hashedPass,
+//       fist_name: 'Parsa',
+//       username: Math.random().toString(),
+//     },
+//   });
+//   console.log(user);
+// } else return 'please enter real email';
