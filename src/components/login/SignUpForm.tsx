@@ -1,6 +1,6 @@
 'use client';
 
-import { register } from '@/lib/actions';
+import { validateEmailPass } from '@/lib/actions';
 import { FormEvent, useRef, useState } from 'react';
 import { SubmitButton } from '@/components/login/SubmitButton';
 import Header from '@/components/login/Header';
@@ -34,7 +34,7 @@ export default function SignUpForm() {
     const password = passwordRef.current?.value as string;
 
     setLoading(true);
-    const message = await register({ email, password });
+    const message = await validateEmailPass({ email, password });
     setLoading(false);
 
     if (message) {

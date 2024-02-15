@@ -10,12 +10,12 @@ export function SubmitButton({
   onClick: MouseEventHandler<HTMLButtonElement>;
   disabled: boolean;
   validate: boolean;
-  name: 'Register' | 'Login';
+  name: 'Register' | 'Login' | 'Submit';
   pending: boolean;
 }) {
   return (
     <button
-      className='relative w-full rounded-lg bg-gradient-to-r from-indigo-700 to-indigo-500 py-2.5 text-xl text-slate-100 transition hover:scale-[1.01] hover:from-indigo-600 hover:to-indigo-400'
+      className='relative w-full rounded-lg bg-gradient-to-r from-indigo-700 to-indigo-500 py-2.5 text-xl text-slate-100 transition hover:scale-[1.01] hover:from-indigo-600 hover:to-indigo-400 disabled:hover:scale-100'
       onClick={onClick}
       disabled={validate && (disabled || pending)}
       type='submit'

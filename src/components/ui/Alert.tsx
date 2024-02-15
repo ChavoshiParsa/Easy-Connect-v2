@@ -16,7 +16,7 @@ export default function Alert() {
   return (
     <div className='relative flex w-full items-center justify-center'>
       <div
-        className='animate-alertBody fixed top-0 z-40 flex w-64 flex-col items-center justify-between
+        className='fixed top-0 z-50 flex w-64 animate-alertBody flex-col items-center justify-between
           overflow-hidden rounded border-l-4 border-zinc-200 bg-zinc-100 shadow-lg transition delay-1000 dark:bg-zinc-800 md:w-[420px]'
         style={{ borderLeftColor: borderColor }}
       >
@@ -29,7 +29,7 @@ export default function Alert() {
             <Icon name='close' size={16} dark={isDark} />
           </button>
         </div>
-        <div className='animate-alertTimerScale bottom-0 z-50 h-0.5 w-full origin-left rounded-full bg-gradient-to-r from-emerald-300 to-purlue' />
+        <div className='bottom-0 z-50 h-0.5 w-full origin-left animate-alertTimerScale rounded-full bg-gradient-to-r from-emerald-300 to-purlue' />
       </div>
     </div>
   );

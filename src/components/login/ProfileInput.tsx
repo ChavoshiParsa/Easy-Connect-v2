@@ -27,8 +27,8 @@ const ProfileInput = forwardRef(function Input(
         ref={ref}
         onChange={onChange}
         required={type === 'essential'}
-        minLength={name === 'username' ? 4 : 3}
-        maxLength={name === 'bio' ? 40 : 20}
+        minLength={name === 'username' ? 4 : 0}
+        maxLength={20}
       />
       {error && validate && (
         <p className='absolute w-full text-left text-xs text-rose-600 dark:text-rose-400 '>

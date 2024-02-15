@@ -1,10 +1,12 @@
 'use client';
 
+import { register } from '@/lib/actions';
 import { useContextProvider } from '@/context/store';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileInput from '../login/ProfileInput';
-import { useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { SubmitButton } from '../login/SubmitButton';
+import Link from 'next/link';
 
 export default function Modal({
   email,
@@ -15,107 +17,154 @@ export default function Modal({
 }) {
   const searchParams = useSearchParams();
   const nextStep = searchParams.get('complete-profile');
+  const router = useRouter();
 
-  const { isDark } = useContextProvider();
+  const { isDark, setNotification } = useContextProvider();
 
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
-  const bioRef = useRef<HTMLInputElement>(null);
+  const bioRef = useRef<HTMLTextAreaElement>(null);
+  const photoRef = useRef<HTMLTextAreaElement>(null);
 
   const [firstNameError, setFirstNameError] = useState('');
-  const [lastNameError, setLastNameError] = useState('');
   const [username, setUsername] = useState<{
     message: string;
     isOk: boolean;
   } | null>(null);
-  const [bioError, setBioError] = useState('');
 
   const [validate, setValidate] = useState(false);
   const [loading, setLoading] = useState(false);
 
   if (!nextStep || !email || !password) return;
 
+  async function formSubmitHandler(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const firstName = firstNameRef.current?.value as string;
+    const lastName = lastNameRef.current?.value as string;
+    const username = usernameRef.current?.value as string;
+    const bio = bioRef.current?.value as string;
+    const photoUrl = photoRef.current?.value as string;
+
+    setLoading(true);
+    const message = await register({
+      email,
+      password,
+      firstName,
+      lastName,
+      username,
+      bio,
+      photoUrl,
+    });
+    setLoading(false);
+
+    if (message) {
+      setNotification({ status: 'Error', message });
+      return;
+    } else {
+      setNotification({
+        status: 'Success',
+        message: `Welcome, ${firstName}! Let's start chatting!`,
+      });
+      router.push('/home');
+    }
+  }
+
   return (
     <dialog
-      className={`${isDark && 'dark'} fixed left-0 top-0 z-50 flex h-full w-full
+      className={`${isDark && 'dark'} z-40 flex h-full w-full
        items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm`}
     >
       <form
-        className='flex w-[600px] flex-col items-start justify-between space-y-4 
-        rounded-xl bg-white p-8 text-zinc-700 dark:bg-black dark:text-zinc-100'
-        onSubmit={() => {}}
+        className='flex w-[640px] flex-col items-center justify-center space-y-8
+        rounded-xl bg-white p-6 text-zinc-700 dark:bg-black dark:text-zinc-100'
+        onSubmit={formSubmitHandler}
       >
-        <h3 className='text-4xl font-bold'>One more step</h3>
-        <p className='text-lg'>
-          Complete your profile to make a memorable impression on others.
-        </p>
-
-        <div className='flex h-36 w-36 items-center justify-center self-center overflow-hidden rounded-full bg-slate-100'>
-          <input type='file' name='profile photo' hidden />
-        </div>
-
-        <div className='flex w-full flex-row items-center justify-between space-x-4'>
-          <ProfileInput
-            name='first name'
-            validate={validate}
-            error={firstNameError}
-            ref={firstNameRef}
-            onChange={() => {
-              setFirstNameError(firstNameRef.current?.validationMessage || '');
-            }}
-            type='essential'
-          />
-          <ProfileInput
-            name='last name'
-            validate={validate}
-            error={lastNameError}
-            ref={lastNameRef}
-            onChange={() => {
-              setLastNameError(lastNameRef.current?.validationMessage || '');
-            }}
-            type='optional'
-          />
-        </div>
-        <div className='flex w-full flex-row items-center justify-between space-x-4'>
-          <div className='w-1/2'>
-            <ProfileInput
-              name='username'
-              validate={false}
-              error=''
-              ref={usernameRef}
-              onChange={() => {}}
-              type='essential'
-            />
-          </div>
-          <p className='w-1/2' style={{}}>
-            {username?.message}
+        <div className='flex w-full flex-col items-start justify-center space-y-2'>
+          <h3 className='text-4xl font-bold'>One more step</h3>
+          <p className='text-lg'>
+            Complete your profile to make a memorable impression on others.
           </p>
         </div>
-        <ProfileInput
-          name='biography'
-          validate={validate}
-          error={bioError}
-          ref={bioRef}
-          onChange={() => {
-            setBioError(bioRef.current?.validationMessage || '');
-          }}
-          type='optional'
-        />
-        <SubmitButton
-          onClick={() => {
-            setValidate(true);
-            setFirstNameError(firstNameRef.current?.validationMessage || '');
-            setLastNameError(lastNameRef.current?.validationMessage || '');
-            setBioError(bioRef.current?.validationMessage || '');
-          }}
-          disabled={
-            !!firstNameError || !!lastNameError || !username?.isOk || !!bioError
-          }
-          validate={validate}
-          name='Register'
-          pending={loading}
-        />
+
+        <div className='flex w-full flex-col items-center justify-center'>
+          <div className='mb-5 flex w-full flex-row items-center justify-center space-x-4'>
+            <div className='flex w-1/2 items-center justify-start space-x-4'>
+              <div className='flex h-32 w-32 items-center justify-center self-center overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800'>
+                Profile
+              </div>
+              <button className='text-sm text-sky-600 hover:text-sky-400'>
+                Choose a Photo
+              </button>
+            </div>
+            <textarea
+              className='h-full min-h-[120px] w-1/2 resize-none rounded border border-slate-200 bg-slate-50 px-3 py-1.5 outline-none dark:border-slate-700 dark:bg-zinc-800'
+              placeholder='Write about your self... (optional)'
+              name='biography'
+              autoComplete='off'
+              ref={bioRef}
+              maxLength={72}
+            />
+          </div>
+
+          <div className='mb-5 flex w-full flex-row items-center justify-between space-x-4'>
+            <ProfileInput
+              name='first name'
+              validate={validate}
+              error={firstNameError}
+              ref={firstNameRef}
+              onChange={() => {
+                setFirstNameError(
+                  firstNameRef.current?.validationMessage || ''
+                );
+              }}
+              type='essential'
+            />
+            <ProfileInput
+              name='last name'
+              validate={false}
+              error=''
+              ref={lastNameRef}
+              onChange={() => {}}
+              type='optional'
+            />
+          </div>
+          <div className='mb-10 flex w-full flex-row items-center justify-between space-x-4'>
+            <div className='w-1/2'>
+              <ProfileInput
+                name='username'
+                validate={false}
+                error=''
+                ref={usernameRef}
+                onChange={() => {}}
+                type='essential'
+              />
+            </div>
+            <p className='w-1/2' style={{}}>
+              {username?.message}
+            </p>
+          </div>
+          <div className='flex w-1/2 flex-row items-center justify-center space-x-3 self-end'>
+            <Link
+              className='relative w-full rounded-lg border-2 border-purlue py-2 text-center text-xl text-purlue transition hover:bg-purlue hover:text-slate-100'
+              href='/sign-up'
+            >
+              Cancel
+            </Link>
+            <SubmitButton
+              onClick={() => {
+                setValidate(true);
+                setFirstNameError(
+                  firstNameRef.current?.validationMessage || ''
+                );
+              }}
+              disabled={!!firstNameError}
+              validate={validate}
+              name='Submit'
+              pending={loading}
+            />
+          </div>
+        </div>
       </form>
     </dialog>
   );
