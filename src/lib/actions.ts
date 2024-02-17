@@ -43,7 +43,7 @@ export async function validateEmailPass(formData: {
       .safeParse(formData);
 
     if (parsedCredentials.success) {
-      const { email, password } = parsedCredentials.data;
+      const { email } = parsedCredentials.data;
 
       const user = await prisma.user.findUnique({
         where: {
@@ -51,7 +51,7 @@ export async function validateEmailPass(formData: {
         },
       });
       if (user) {
-        return "You've already registered with this email. Try sign in?";
+        return "You've already registered with this email. Want to try sign in instead?";
       }
     } else return 'Please provide valid credentials.';
   } catch (error: any) {
@@ -82,8 +82,6 @@ export async function register(formData: {
         bio: z.string().max(72).optional(),
       })
       .safeParse(formData);
-
-    console.log(parsedCredentials);
 
     if (parsedCredentials.success) {
       const { email, password, username, firstName, lastName, photoUrl, bio } =
@@ -121,4 +119,31 @@ export async function register(formData: {
     email: safeEmail,
     password: safePass,
   });
+}
+
+export async function validateUsername(username: string) {
+  const usernameSchema = z
+    .string()
+    .min(4, { message: 'Username must be at least 4 characters long' })
+    .max(20, { message: 'Username must be at most 20 characters long' })
+    .regex(/^[a-zA-Z0-9]+$/, {
+      message: 'Username must contain only English letters and numbers',
+    });
+
+  const safeUsername = usernameSchema.safeParse(username);
+
+  if (safeUsername.success) {
+    const existingUsername = await prisma.user.findUnique({
+      where: {
+        username,
+      },
+    });
+    if (existingUsername) {
+      return { message: 'This username is already taken.', isValid: false };
+    } else {
+      return { message: `${username} is available.`, isValid: true };
+    }
+  } else {
+    return { message: safeUsername.error.errors[0].message, isValid: false };
+  }
 }

@@ -1,10 +1,10 @@
 'use client';
 
-import { register } from '@/lib/actions';
+import { register, validateUsername } from '@/lib/actions';
 import { useContextProvider } from '@/context/store';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileInput from '../login/ProfileInput';
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useEffect, useRef, useState } from 'react';
 import { SubmitButton } from '../login/SubmitButton';
 import Link from 'next/link';
 
@@ -29,12 +29,34 @@ export default function Modal({
 
   const [firstNameError, setFirstNameError] = useState('');
   const [username, setUsername] = useState<{
+    username: string;
     message: string;
-    isOk: boolean;
-  } | null>(null);
+    isValid: boolean;
+  }>({ username: '', message: 'Please fill out this field.', isValid: false });
+  const [usernameLoading, setUsernameLoading] = useState(false);
 
   const [validate, setValidate] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    async function validate(username: string) {
+      const result = await validateUsername(username);
+      setUsername((prev) => ({
+        ...prev,
+        message: result.message,
+        isValid: result.isValid,
+      }));
+    }
+
+    setUsernameLoading(true);
+    const timer = setTimeout(() => {
+      validate(username.username).then(() => setUsernameLoading(false));
+    }, 500);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [username.username]);
 
   if (!nextStep || !email || !password) return;
 
@@ -93,7 +115,10 @@ export default function Modal({
               <div className='flex h-32 w-32 items-center justify-center self-center overflow-hidden rounded-full bg-slate-100 dark:bg-zinc-800'>
                 Profile
               </div>
-              <button className='text-sm text-sky-600 hover:text-sky-400'>
+              <button
+                className='text-sm text-sky-600 hover:text-sky-400'
+                type='button'
+              >
                 Choose a Photo
               </button>
             </div>
@@ -136,12 +161,26 @@ export default function Modal({
                 validate={false}
                 error=''
                 ref={usernameRef}
-                onChange={() => {}}
+                onChange={(e) =>
+                  setUsername((prev) => ({
+                    ...prev,
+                    username: e.target.value,
+                  }))
+                }
                 type='essential'
               />
             </div>
-            <p className='w-1/2' style={{}}>
-              {username?.message}
+            <p
+              className='w-1/2 text-sm leading-4'
+              style={{
+                color: `${usernameLoading ? '' : username.isValid ? 'green' : 'red'}`,
+              }}
+            >
+              {username.username !== ''
+                ? usernameLoading
+                  ? 'Checking...'
+                  : username?.message
+                : ''}
             </p>
           </div>
           <div className='flex w-1/2 flex-row items-center justify-center space-x-3 self-end'>
@@ -158,7 +197,7 @@ export default function Modal({
                   firstNameRef.current?.validationMessage || ''
                 );
               }}
-              disabled={!!firstNameError}
+              disabled={!!firstNameError || !username.isValid}
               validate={validate}
               name='Submit'
               pending={loading}

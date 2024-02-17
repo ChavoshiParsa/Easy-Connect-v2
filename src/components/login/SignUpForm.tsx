@@ -44,14 +44,6 @@ export default function SignUpForm() {
 
     setCredentials((prev) => ({ email, password }));
     router.push('sign-up?complete-profile=true');
-
-    // else {
-    //   setNotification({
-    //     status: 'Success',
-    //     message: "Welcome, [Name]! Let's start chatting!",
-    //   });
-    //   router.push('/home');
-    // }
   }
 
   return (
