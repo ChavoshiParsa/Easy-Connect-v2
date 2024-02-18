@@ -135,7 +135,7 @@ export async function validateUsername(username: string) {
   if (safeUsername.success) {
     const existingUsername = await prisma.user.findUnique({
       where: {
-        username,
+        username: username.toLowerCase(),
       },
     });
     if (existingUsername) {

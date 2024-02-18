@@ -19,7 +19,7 @@ const ProfileInput = forwardRef(function Input(
   return (
     <div className='relative w-full'>
       <input
-        className='w-full rounded border border-slate-200 bg-slate-50 px-4 py-1.5 outline-none dark:border-slate-700 dark:bg-zinc-800'
+        className='w-full rounded border border-slate-200 bg-slate-50 px-2 py-1.5 outline-none dark:border-slate-700 dark:bg-zinc-800 md:px-4'
         placeholder={`${name.charAt(0).toUpperCase()}${name.slice(1)}${type === 'essential' ? '*' : ' (optional)'}`}
         type='text'
         name={name}
