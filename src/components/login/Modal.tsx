@@ -1,6 +1,6 @@
 'use client';
 
-import { register, validateUsername } from '@/lib/actions';
+import { deletePhoto, register, validateUsername } from '@/lib/actions';
 import { useContextProvider } from '@/context/store';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileInput from './ProfileInput';
@@ -128,6 +128,7 @@ export default function Modal({
               </div>
               <CustomUploader
                 email={email}
+                profilePhotoUrl={profilePhotoUrl}
                 setProfilePhotoUrl={setProfilePhotoUrl}
               />
             </div>
@@ -196,6 +197,13 @@ export default function Modal({
             <Link
               className='relative w-full rounded-lg border-2 border-purlue py-1.5 text-center text-base text-purlue transition hover:bg-purlue hover:text-slate-100 md:py-2 md:text-xl'
               href='/sign-up'
+              onClick={async () => {
+                setValidate(false);
+                if (profilePhotoUrl === '') return;
+                const key = profilePhotoUrl.split('/')[4];
+                await deletePhoto(key);
+                setProfilePhotoUrl('');
+              }}
             >
               Cancel
             </Link>

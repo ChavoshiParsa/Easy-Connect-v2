@@ -8,16 +8,21 @@ const SIZE = 1024;
 
 export default function CustomUploader({
   email,
+  profilePhotoUrl,
   setProfilePhotoUrl,
 }: {
   email: string;
+  profilePhotoUrl: string;
   setProfilePhotoUrl: Dispatch<SetStateAction<string>>;
 }) {
   const { setNotification } = useContextProvider();
-  const [key, setKey] = useState('');
   const [progress, setProgress] = useState<number | null>(null);
+  const [loading, setLoading] = useState(false);
   const { startUpload } = useUploadThing('imageUploader', {
     onUploadBegin: async () => {
+      setLoading(true);
+      if (profilePhotoUrl === '') return;
+      const key = profilePhotoUrl.split('/')[4];
       await deletePhoto(key);
     },
     onUploadProgress(p: number) {
@@ -28,25 +33,26 @@ export default function CustomUploader({
         uploadedBy: string;
       }>[]
     ) => {
-      console.log(res);
       if (res && res.length > 0) {
-        const { url, key } = res[0];
+        const { url } = res[0];
         setProfilePhotoUrl(url);
-        setKey(key);
       }
       setNotification({
         status: 'Info',
         message: 'Your photo has been successfully uploaded.',
       });
+      setLoading(false);
     },
     onUploadError: (error: Error) => {
       setNotification({ status: 'Error', message: error.message });
+      setLoading(false);
     },
   });
 
   const inputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
     const imageFile: File | undefined = event.target.files?.[0];
-    console.log(imageFile);
+
     if (!imageFile) {
       return;
     }
@@ -88,7 +94,6 @@ export default function CustomUploader({
                 type: 'image/jpg',
                 lastModified: Date.now(),
               });
-              console.log(newFile);
               startUpload([newFile]);
             }
           },
@@ -112,8 +117,22 @@ export default function CustomUploader({
         </progress>
       ) : (
         <label className='flex cursor-pointer flex-col items-center justify-center rounded-md border border-sky-600 px-1 py-0.5 text-sm text-sky-600 hover:bg-sky-600 hover:text-slate-50'>
-          <input className='hidden' type='file' onChange={inputChangeHandler} />
-          <span>Choose a Photo</span>
+          <input
+            className='hidden'
+            type='file'
+            onChange={inputChangeHandler}
+            disabled={loading}
+          />
+          <span className='flex flex-row items-center justify-center space-x-2'>
+            {loading ? (
+              <>
+                <div className='h-4 w-4 animate-spin rounded-full border-2 border-[#00000041] border-r-slate-100 bg-transparent' />
+                <span>Uploading...</span>
+              </>
+            ) : (
+              'Choose a Photo'
+            )}
+          </span>
         </label>
       )}
     </>
