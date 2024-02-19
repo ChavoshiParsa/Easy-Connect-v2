@@ -9,7 +9,7 @@ import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
 import { useRouter } from 'next/navigation';
 import { useContextProvider } from '@/context/store';
-import Modal from '../ui/Modal';
+import Modal from './Modal';
 
 export default function SignUpForm() {
   const emailRef = useRef<HTMLInputElement>(null);

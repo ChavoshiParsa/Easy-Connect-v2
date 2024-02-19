@@ -1,8 +1,7 @@
 import type { Config } from 'tailwindcss';
-import { withUt } from 'uploadthing/tw';
 const defaultTheme = require('tailwindcss/defaultTheme');
 
-const config: Config = withUt({
+const config: Config = {
   darkMode: 'class',
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -41,6 +40,6 @@ const config: Config = withUt({
     },
   },
   plugins: [require('tailwind-children')],
-});
+};
 
 export default config;

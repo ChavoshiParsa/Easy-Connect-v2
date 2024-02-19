@@ -5,6 +5,7 @@ import { AuthError } from 'next-auth';
 import { prisma } from '../../prisma/prisma';
 import { z } from 'zod';
 import { hashSync } from 'bcrypt-ts';
+import { UTApi } from 'uploadthing/server';
 
 export async function logout() {
   await signOut();
@@ -147,3 +148,10 @@ export async function validateUsername(username: string) {
     return { message: safeUsername.error.errors[0].message, isValid: false };
   }
 }
+
+export const deletePhoto = async (photo: string) => {
+  const utapi = new UTApi();
+  if (photo !== '') {
+    await utapi.deleteFiles(photo);
+  }
+};

@@ -3,11 +3,14 @@
 import { register, validateUsername } from '@/lib/actions';
 import { useContextProvider } from '@/context/store';
 import { useRouter, useSearchParams } from 'next/navigation';
-import ProfileInput from '../login/ProfileInput';
+import ProfileInput from './ProfileInput';
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { SubmitButton } from '../login/SubmitButton';
+import { SubmitButton } from './SubmitButton';
 import Link from 'next/link';
-import { UploadButton } from '@/utils/uploadthing';
+import Image from 'next/image';
+import CustomUploader from './CustomUploader';
+
+const SIZE = 1024;
 
 export default function Modal({
   email,
@@ -26,7 +29,6 @@ export default function Modal({
   const lastNameRef = useRef<HTMLInputElement>(null);
   const usernameRef = useRef<HTMLInputElement>(null);
   const bioRef = useRef<HTMLTextAreaElement>(null);
-  const photoRef = useRef<HTMLTextAreaElement>(null);
 
   const [firstNameError, setFirstNameError] = useState('');
   const [username, setUsername] = useState<{
@@ -35,6 +37,7 @@ export default function Modal({
     isValid: boolean;
   }>({ username: '', message: 'Please fill out this field.', isValid: false });
   const [usernameLoading, setUsernameLoading] = useState(false);
+  const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
 
   const [validate, setValidate] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -67,7 +70,6 @@ export default function Modal({
     const lastName = lastNameRef.current?.value as string;
     const username = usernameRef.current?.value as string;
     const bio = bioRef.current?.value as string;
-    const photoUrl = photoRef.current?.value as string;
 
     setLoading(true);
     const message = await register({
@@ -77,7 +79,7 @@ export default function Modal({
       lastName,
       username,
       bio,
-      photoUrl,
+      photoUrl: profilePhotoUrl,
     });
     setLoading(false);
 
@@ -112,27 +114,21 @@ export default function Modal({
 
         <div className='flex w-full flex-col items-center justify-center'>
           <div className='mb-3 flex w-full flex-col items-center justify-center space-y-4 md:mb-5 md:flex-row md:space-x-4 md:space-y-0'>
-            <div className='flex w-full flex-col items-center justify-center space-y-2 md:w-1/2 md:flex-row md:justify-start md:space-x-4 md:space-y-0'>
-              <div className='flex h-28 w-28 items-center justify-center self-center overflow-hidden rounded-full bg-slate-200 text-base dark:bg-zinc-800 md:h-32 md:w-32'>
-                Profile
+            <div className='flex w-full flex-col items-center justify-center space-y-2 md:w-1/2 md:flex-row md:justify-center md:space-x-4 md:space-y-0'>
+              <div className='relative flex h-28 w-28 items-center justify-center self-center overflow-hidden rounded-full bg-slate-200 text-base dark:bg-zinc-800 md:h-32 md:w-32'>
+                {!profilePhotoUrl && <span>Profile</span>}
+                {profilePhotoUrl && (
+                  <Image
+                    src={profilePhotoUrl}
+                    alt='photo of user'
+                    width={SIZE}
+                    height={SIZE}
+                  />
+                )}
               </div>
-              <button
-                className='text-sm text-sky-600 hover:text-sky-400'
-                type='button'
-              >
-                Choose a Photo
-              </button>
-              <UploadButton
-                endpoint='imageUploader'
-                onClientUploadComplete={(res) => {
-                  // Do something with the response
-                  console.log('Files: ', res);
-                  alert('Upload Completed');
-                }}
-                onUploadError={(error: Error) => {
-                  // Do something with the error.
-                  alert(`ERROR! ${error.message}`);
-                }}
+              <CustomUploader
+                email={email}
+                setProfilePhotoUrl={setProfilePhotoUrl}
               />
             </div>
             <textarea
