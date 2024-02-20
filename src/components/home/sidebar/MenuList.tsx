@@ -2,25 +2,32 @@ import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import { FormEvent, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { useContextProvider } from '@/context/store';
 import { logout } from '@/lib/actions';
+import { useDispatch } from 'react-redux';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { setIsMenuOpen, setNotification } from '@/redux/ui-slice';
 
 const SIZE = 20;
 
 export default function MenuList() {
   const path = usePathname();
   const [isSettingOpen, setIsSettingOpen] = useState(true);
-  const { isDark, setIsMenuOpen, setNotification } = useContextProvider();
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   const router = useRouter();
 
   async function logoutSubmitHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     await logout();
-    setNotification({
-      status: 'Success',
-      message: 'Logout successful! See you later, [Name].',
-    });
+    dispatch(
+      setNotification({
+        status: 'Success',
+        message: 'Logout successful! See you later, [Name].',
+      })
+    );
     router.push('/sign-in');
   }
 
@@ -33,7 +40,7 @@ export default function MenuList() {
           borderRight: `${path === '/home' && '#6A4DFF solid 3px'}`,
         }}
         href='/home'
-        onClick={() => setIsMenuOpen(false)}
+        onClick={() => dispatch(setIsMenuOpen(false))}
       >
         <Icon
           name='home'

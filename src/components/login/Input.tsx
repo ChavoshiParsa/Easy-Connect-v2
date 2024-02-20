@@ -1,4 +1,4 @@
-import { useContextProvider } from '@/context/store';
+import { useAppSelector } from '@/redux/store';
 import Icon from '../ui/Icon';
 import { ChangeEventHandler, LegacyRef, forwardRef } from 'react';
 
@@ -16,7 +16,7 @@ const Input = forwardRef(function Input(
   },
   ref: LegacyRef<HTMLInputElement>
 ) {
-  const { isDark } = useContextProvider();
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   return (
     <div className='relative w-full'>

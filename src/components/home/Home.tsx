@@ -1,14 +1,15 @@
 'use client';
 
-import { useContextProvider } from '@/context/store';
 import Menu from '@/components/home/sidebar/Menu';
 import Topbar from '@/components/home/Topbar';
 import SearchField from '@/components/home/SearchField';
 import ActiveUser from '@/components/home/ActiveUser';
 import ChatList from '@/components/home/chat/ChatList';
+import { useAppSelector } from '@/redux/store';
 
 export default function Home() {
-  const { isMenuOpen } = useContextProvider();
+  const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
+
   return (
     <main className='flex h-full flex-row items-center justify-start'>
       {isMenuOpen && <Menu />}

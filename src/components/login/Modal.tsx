@@ -1,7 +1,6 @@
 'use client';
 
 import { deletePhoto, register, validateUsername } from '@/lib/actions';
-import { useContextProvider } from '@/context/store';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileInput from './ProfileInput';
 import { FormEvent, useEffect, useRef, useState } from 'react';
@@ -9,6 +8,9 @@ import { SubmitButton } from './SubmitButton';
 import Link from 'next/link';
 import Image from 'next/image';
 import CustomUploader from './CustomUploader';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import { setNotification } from '@/redux/ui-slice';
 
 const SIZE = 1024;
 
@@ -19,11 +21,12 @@ export default function Modal({
   email: string;
   password: string;
 }) {
+  const dispatch = useDispatch<AppDispatch>();
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
+
   const searchParams = useSearchParams();
   const nextStep = searchParams.get('complete-profile');
   const router = useRouter();
-
-  const { isDark, setNotification } = useContextProvider();
 
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
@@ -84,13 +87,15 @@ export default function Modal({
     setLoading(false);
 
     if (message) {
-      setNotification({ status: 'Error', message });
+      dispatch(setNotification({ status: 'Error', message }));
       return;
     } else {
-      setNotification({
-        status: 'Success',
-        message: `Welcome, ${firstName}! Let's start chatting!`,
-      });
+      dispatch(
+        setNotification({
+          status: 'Success',
+          message: `Welcome, ${firstName}! Let's start chatting!`,
+        })
+      );
       router.push('/home');
     }
   }

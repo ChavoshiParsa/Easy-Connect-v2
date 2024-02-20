@@ -1,9 +1,12 @@
 import Icon from '@/components/ui/Icon';
-import { useContextProvider } from '@/context/store';
-import { useEffect, useState } from 'react';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { toggleDarkMode } from '@/redux/ui-slice';
+import { useDispatch } from 'react-redux';
 
 export default function SwitchButton() {
-  const { isDark, setIsDark } = useContextProvider();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   return (
     <button
@@ -13,7 +16,7 @@ export default function SwitchButton() {
         backgroundColor: `${isDark ? '#9782ff' : '#9ca3af'}`,
       }}
       type='button'
-      onClick={() => setIsDark((prev) => !prev)}
+      onClick={() => dispatch(toggleDarkMode())}
     >
       <span className='z-20 mx-px flex h-4 w-4 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800'>
         {!isDark && <Icon name='sun' size={14} dark={isDark} />}

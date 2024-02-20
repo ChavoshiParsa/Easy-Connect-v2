@@ -8,10 +8,14 @@ import Input from '@/components/login/Input';
 import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
 import { useRouter } from 'next/navigation';
-import { useContextProvider } from '@/context/store';
 import Modal from './Modal';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/redux/store';
+import { setNotification } from '@/redux/ui-slice';
 
 export default function SignUpForm() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -24,8 +28,6 @@ export default function SignUpForm() {
     email: string;
     password: string;
   } | null>(null);
-
-  const { setNotification } = useContextProvider();
   const router = useRouter();
 
   async function formSubmitHandler(event: FormEvent<HTMLFormElement>) {
@@ -38,7 +40,7 @@ export default function SignUpForm() {
     setLoading(false);
 
     if (message) {
-      setNotification({ status: 'Error', message });
+      dispatch(setNotification({ status: 'Error', message }));
       return;
     }
 

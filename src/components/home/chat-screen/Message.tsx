@@ -1,5 +1,5 @@
 import Icon from '@/components/ui/Icon';
-import { useContextProvider } from '@/context/store';
+import { useContextProvider } from '@/redux/context';
 
 type Message = {
   text: string;

@@ -1,8 +1,8 @@
-import { useContextProvider } from '@/context/store';
+import { useAppSelector } from '@/redux/store';
 import Icon from '../ui/Icon';
 
 export default function SearchField() {
-  const { isDark } = useContextProvider();
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   return (
     <div className='relative mb-4 w-full'>

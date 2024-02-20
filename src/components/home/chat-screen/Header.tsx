@@ -1,10 +1,10 @@
 import Avatar from '@/components/ui/Avatar';
 import Icon from '@/components/ui/Icon';
-import { useContextProvider } from '@/context/store';
+import { useAppSelector } from '@/redux/store';
 import Link from 'next/link';
 
 export default function Header() {
-  const { isDark } = useContextProvider();
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
   return (
     <div className='z-20 flex w-full flex-row items-center justify-between bg-slate-50 py-2 shadow-lg dark:bg-zinc-900'>
       <Link className='mr-4 rounded-full ' href='/home'>

@@ -1,4 +1,4 @@
-import { useContextProvider } from '@/context/store';
+import { useAppSelector } from '@/redux/store';
 import Image from 'next/image';
 
 export default function MainImage({
@@ -8,7 +8,7 @@ export default function MainImage({
   page: 'up' | 'in';
   alt: string;
 }) {
-  const { isDark } = useContextProvider();
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   return (
     <Image

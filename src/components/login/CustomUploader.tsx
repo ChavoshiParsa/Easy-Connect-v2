@@ -1,7 +1,9 @@
-import { useContextProvider } from '@/context/store';
 import { deletePhoto } from '@/lib/actions';
+import { AppDispatch } from '@/redux/store';
+import { setNotification } from '@/redux/ui-slice';
 import { useUploadThing } from '@/utils/uploadthing';
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { UploadFileResponse } from 'uploadthing/client';
 
 const SIZE = 1024;
@@ -15,7 +17,8 @@ export default function CustomUploader({
   profilePhotoUrl: string;
   setProfilePhotoUrl: Dispatch<SetStateAction<string>>;
 }) {
-  const { setNotification } = useContextProvider();
+  const dispatch = useDispatch<AppDispatch>();
+
   const [progress, setProgress] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const { startUpload } = useUploadThing('imageUploader', {
@@ -37,10 +40,12 @@ export default function CustomUploader({
         const { url } = res[0];
         setProfilePhotoUrl(url);
       }
-      setNotification({
-        status: 'Info',
-        message: 'Your photo has been successfully uploaded.',
-      });
+      dispatch(
+        setNotification({
+          status: 'Info',
+          message: 'Your photo has been successfully uploaded.',
+        })
+      );
       setLoading(false);
     },
     onUploadError: (error: Error) => {

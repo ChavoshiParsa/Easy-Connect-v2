@@ -1,12 +1,12 @@
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
 import { Varela_Round } from 'next/font/google';
-import { ContextProvider } from '@/context/store';
 import NextTopLoader from 'nextjs-toploader';
 import Alert from '@/components/ui/Alert';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
 import { ourFileRouter } from './api/uploadthing/core';
+import { Provider } from '@/redux/provider';
 
 const inter = Varela_Round({ subsets: ['latin'], weight: '400' });
 
@@ -21,12 +21,12 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={inter.className + ' transition-colors duration-200'}>
-        <ContextProvider>
+        <Provider>
           <NextTopLoader color='#6A4DFF' />
           <Alert />
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)} />
           {children}
-        </ContextProvider>
+        </Provider>
       </body>
     </html>
   );

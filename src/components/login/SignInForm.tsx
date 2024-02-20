@@ -6,11 +6,15 @@ import Header from '@/components/login/Header';
 import Input from '@/components/login/Input';
 import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
-import { useContextProvider } from '@/context/store';
 import { authenticate } from '@/lib/actions';
 import { useRouter } from 'next/navigation';
+import { AppDispatch } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import { setNotification } from '@/redux/ui-slice';
 
 export default function SignInForm() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -19,8 +23,6 @@ export default function SignInForm() {
 
   const [validate, setValidate] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { setNotification } = useContextProvider();
 
   const router = useRouter();
 
@@ -33,12 +35,14 @@ export default function SignInForm() {
     const message = await authenticate({ email, password });
     setLoading(false);
 
-    if (message) setNotification({ status: 'Error', message });
+    if (message) dispatch(setNotification({ status: 'Error', message }));
     else {
-      setNotification({
-        status: 'Success',
-        message: "Welcome back, [Name]! You're logged in successfully.",
-      });
+      dispatch(
+        setNotification({
+          status: 'Success',
+          message: "Welcome back, [Name]! You're logged in successfully.",
+        })
+      );
       router.push('/home');
     }
   }

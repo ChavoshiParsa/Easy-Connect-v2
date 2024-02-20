@@ -8,9 +8,9 @@ import InputField from '@/components/home/chat-screen/InputField';
 import MessageContainer from '@/components/home/chat-screen/MessageContainer';
 import ChatList from '@/components/home/chat/ChatList';
 import Menu from '@/components/home/sidebar/Menu';
-import { useContextProvider } from '@/context/store';
+import { useAppSelector } from '@/redux/store';
 export default function ChatScreen() {
-  const { isMenuOpen } = useContextProvider();
+  const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
 
   return (
     <main className='flex h-full w-full flex-row items-center justify-start bg-slate-100 dark:bg-zinc-800'>

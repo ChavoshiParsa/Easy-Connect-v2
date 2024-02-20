@@ -1,10 +1,15 @@
 'use client';
 
-import { useContextProvider } from '@/context/store';
+import { AppDispatch, useAppSelector } from '@/redux/store';
 import Icon from './Icon';
+import { setNotification } from '@/redux/ui-slice';
+import { useDispatch } from 'react-redux';
 
 export default function Alert() {
-  const { notification, setNotification, isDark } = useContextProvider();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
+  const notification = useAppSelector((state) => state.uiReducer.notification);
 
   if (!notification) return;
 
@@ -25,7 +30,7 @@ export default function Alert() {
             <h3 className='text-lg font-bold'>{notification.status}</h3>
             <p className='text-sm text-zinc-400'>{notification.message}</p>
           </div>
-          <button className='' onClick={() => setNotification(null)}>
+          <button className='' onClick={() => dispatch(setNotification(null))}>
             <Icon name='close' size={16} dark={isDark} />
           </button>
         </div>
