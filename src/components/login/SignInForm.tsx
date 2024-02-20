@@ -6,7 +6,7 @@ import Header from '@/components/login/Header';
 import Input from '@/components/login/Input';
 import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
-import { authenticate } from '@/lib/actions';
+import { authenticate } from '@/lib/auth-action';
 import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';
@@ -28,6 +28,7 @@ export default function SignInForm() {
 
   async function formSubmitHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
     const email = emailRef.current?.value as string;
     const password = passwordRef.current?.value as string;
 
@@ -40,7 +41,7 @@ export default function SignInForm() {
       dispatch(
         setNotification({
           status: 'Success',
-          message: "Welcome back, [Name]! You're logged in successfully.",
+          message: `Welcome back dear! You're logged in successfully.`,
         })
       );
       router.push('/home');
@@ -92,11 +93,6 @@ export default function SignInForm() {
           pending={loading}
         />
         <RedirectLink page='up' text="Don't have an account? " />
-        {/* <Link href='?modal=true'>
-      <button type='button' className='bg-blue-500 p-2 text-white'>
-        Open Modal
-      </button>
-    </Link> */}
       </div>
     </form>
   );

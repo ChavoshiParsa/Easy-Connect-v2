@@ -16,7 +16,6 @@ export async function authenticate(formData: {
   password: string;
 }) {
   try {
-    console.log(formData);
     await signIn('credentials', formData);
   } catch (error) {
     if (error instanceof AuthError) {
@@ -38,7 +37,7 @@ export async function validateEmailPass(formData: {
   try {
     const parsedCredentials = z
       .object({
-        email: z.string().email().toLowerCase(),
+        email: z.string().email().toLowerCase().trim(),
         password: z.string().min(6),
       })
       .safeParse(formData);
@@ -65,22 +64,22 @@ export async function register(formData: {
   email: string;
   password: string;
   firstName: string;
-  lastName?: string;
-  photoUrl?: string;
-  bio?: string;
+  lastName: string;
+  photoUrl: string;
+  bio: string;
 }) {
   let safeEmail: string;
   let safePass: string;
   try {
     const parsedCredentials = z
       .object({
-        username: z.string().min(4).max(20).toLowerCase(),
-        email: z.string().email().toLowerCase(),
+        username: z.string().min(4).max(20).toLowerCase().trim(),
+        email: z.string().email().toLowerCase().trim(),
         password: z.string().min(6),
-        firstName: z.string().min(1).max(20),
-        lastName: z.string().max(20).optional(),
-        photoUrl: z.string().optional(),
-        bio: z.string().max(72).optional(),
+        firstName: z.string().min(1).max(20).trim(),
+        lastName: z.string().max(20).trim(),
+        photoUrl: z.string(),
+        bio: z.string().max(72).trim(),
       })
       .safeParse(formData);
 
@@ -106,9 +105,9 @@ export async function register(formData: {
           username,
           email,
           password: hashedPass,
-          fist_name: firstName,
-          last_name: lastName,
-          profile_photo_url: photoUrl,
+          firstName,
+          lastName,
+          profileUrl: photoUrl,
           biography: bio,
         },
       });
@@ -125,6 +124,7 @@ export async function register(formData: {
 export async function validateUsername(username: string) {
   const usernameSchema = z
     .string()
+    .trim()
     .min(4, { message: 'Username must be at least 4 characters long' })
     .max(20, { message: 'Username must be at most 20 characters long' })
     .regex(/^[a-zA-Z0-9]+$/, {

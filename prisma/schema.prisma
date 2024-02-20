@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  fist_name         String
-  last_name         String?
-  profile_photo_url String?
-  biography         String?
-  username          String   @unique
-  email             String   @unique
-  password          String
-  unread_messages   Int      @default(0)
-  last_seen         DateTime @default(now())
-  createdAt         DateTime @default(now())
-  chats             Chat[]
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  firstName      String
+  lastName       String
+  profileUrl     String
+  biography      String
+  username       String   @unique
+  email          String   @unique
+  password       String
+  unreadMessages Int      @default(0)
+  lastSeen       DateTime @default(now())
+  createdAt      DateTime @default(now())
+  chats          Chat[]
 }
 
 model Chat {

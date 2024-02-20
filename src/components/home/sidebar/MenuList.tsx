@@ -2,10 +2,11 @@ import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import { FormEvent, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { logout } from '@/lib/actions';
+import { logout } from '@/lib/auth-action';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { setIsMenuOpen, setNotification } from '@/redux/ui-slice';
+import { clearCredentials } from '@/redux/auth-slice';
 
 const SIZE = 20;
 
@@ -14,8 +15,8 @@ export default function MenuList() {
   const [isSettingOpen, setIsSettingOpen] = useState(true);
 
   const dispatch = useDispatch<AppDispatch>();
-
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
+  const firstName = useAppSelector((state) => state.authReducer.firstName);
 
   const router = useRouter();
 
@@ -25,9 +26,10 @@ export default function MenuList() {
     dispatch(
       setNotification({
         status: 'Success',
-        message: 'Logout successful! See you later, [Name].',
+        message: `Logout successful! See you later, ${firstName}.`,
       })
     );
+    dispatch(clearCredentials());
     router.push('/sign-in');
   }
 

@@ -5,10 +5,18 @@ import Topbar from '@/components/home/Topbar';
 import SearchField from '@/components/home/SearchField';
 import ActiveUser from '@/components/home/ActiveUser';
 import ChatList from '@/components/home/chat/ChatList';
-import { useAppSelector } from '@/redux/store';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { AuthState, setCredentials } from '@/redux/auth-slice';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
 
-export default function Home() {
+export default function Home({ credentials }: { credentials: AuthState }) {
+  const dispatch = useDispatch<AppDispatch>();
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
+
+  useEffect(() => {
+    dispatch(setCredentials(credentials));
+  }, [dispatch, credentials]);
 
   return (
     <main className='flex h-full flex-row items-center justify-start'>

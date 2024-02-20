@@ -1,8 +1,6 @@
-'use client';
-
-import { useEffect } from 'react';
+import { useCallback, useEffect, useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppDispatch, RootState, useAppSelector } from './store';
+import { AppDispatch, useAppSelector } from './store';
 import { setIsDark, setIsMenuOpen, setNotification } from './ui-slice';
 
 let firstTime = true;
@@ -26,7 +24,7 @@ export const ContextProvider: React.FC<{
     };
   }, [notification, dispatch]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (firstTime) {
       dispatch(setIsDark(localStorage.theme === 'dark'));
       firstTime = false;
@@ -39,11 +37,11 @@ export const ContextProvider: React.FC<{
       localStorage.theme = 'light';
       document.documentElement.classList.remove('dark');
     }
-  }, [isDark, dispatch]);
+  }, [dispatch, isDark]);
 
-  function handleResize() {
+  const handleResize = useCallback(() => {
     if (window.innerWidth > 1024) dispatch(setIsMenuOpen(false));
-  }
+  }, [dispatch]);
 
   useEffect(() => {
     window.addEventListener('resize', handleResize);
@@ -51,11 +49,11 @@ export const ContextProvider: React.FC<{
     return () => {
       window.removeEventListener('resize', handleResize);
     };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, handleResize]);
 
   useEffect(() => {
     handleResize();
-  }, []);
+  }, [handleResize]);
 
   return <>{children}</>;
 };

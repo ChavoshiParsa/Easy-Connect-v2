@@ -1,6 +1,6 @@
 'use client';
 
-import { deletePhoto, register, validateUsername } from '@/lib/actions';
+import { deletePhoto, register, validateUsername } from '@/lib/auth-action';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileInput from './ProfileInput';
 import { FormEvent, useEffect, useRef, useState } from 'react';
