@@ -23,13 +23,13 @@ export default function MenuList() {
   async function logoutSubmitHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     await logout();
+    dispatch(clearCredentials());
     dispatch(
       setNotification({
         status: 'Success',
         message: `Logout successful! See you later, ${firstName}.`,
       })
     );
-    dispatch(clearCredentials());
     router.push('/sign-in');
   }
 

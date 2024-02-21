@@ -11,7 +11,7 @@ export default function Header() {
         <Icon name='back' size={28} dark={isDark} />
       </Link>
       <div className='flex items-center justify-start space-x-3'>
-        <Avatar name='Parsa-Chavoshi' size={50} online={false} />
+        {/* <Avatar name='Parsa-Chavoshi' size={50} online={false} /> */}
         <div className='flex w-full flex-col items-start justify-between'>
           <h3 className='text-lg font-bold'>Parsa Chavoshi</h3>
           <span className='text-sm text-zinc-400'>Last seen recently</span>

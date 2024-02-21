@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { hexToFilter } from '@/lib/hex-to-filter';
+import { hexToFilter } from '@/utils/hex-to-filter';
 
 export default function Icon({
   name,

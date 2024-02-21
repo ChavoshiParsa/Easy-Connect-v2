@@ -7,7 +7,7 @@ export default function ChatItem() {
       className='flex w-full items-center justify-between space-x-4 px-1.5 py-3 hover:bg-purple-50 dark:hover:bg-zinc-950'
       href='/home/5WpVnLa46flQpf'
     >
-      <Avatar name='Parsa-Chavoshi' size={52} online={false} />
+      {/* <Avatar name='Parsa-Chavoshi' size={52} online={false} /> */}
       <div className='flex w-full flex-col items-center justify-center space-y-1'>
         <div className='flex w-full items-center justify-between'>
           <h3 className='font-bold'>Parsa Chavoshi</h3>

@@ -6,17 +6,23 @@ import SearchField from '@/components/home/SearchField';
 import ActiveUser from '@/components/home/ActiveUser';
 import ChatList from '@/components/home/chat/ChatList';
 import { AppDispatch, useAppSelector } from '@/redux/store';
-import { AuthState, setCredentials } from '@/redux/auth-slice';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
+import { setCredentials } from '@/redux/auth-slice';
+import { getLoggedUser } from '@/lib/users-action';
 
-export default function Home({ credentials }: { credentials: AuthState }) {
+export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
 
   useEffect(() => {
-    dispatch(setCredentials(credentials));
-  }, [dispatch, credentials]);
+    const getUser = async () => {
+      const user = await getLoggedUser();
+      if (!user) return;
+      dispatch(setCredentials(user));
+    };
+    getUser();
+  }, [dispatch]);
 
   return (
     <main className='flex h-full flex-row items-center justify-start'>

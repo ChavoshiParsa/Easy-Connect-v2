@@ -1,4 +1,4 @@
-import { deletePhoto } from '@/lib/auth-action';
+import { deletePhoto } from '@/lib/photo-action';
 import { AppDispatch } from '@/redux/store';
 import { setNotification } from '@/redux/ui-slice';
 import { useUploadThing } from '@/utils/uploadthing';
