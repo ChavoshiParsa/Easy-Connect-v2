@@ -31,7 +31,7 @@ export default function ChatScreen() {
         <ActiveUser />
         <ChatList />
       </div>
-      <div className='relative flex h-full flex-col items-center justify-between children:px-3.5 md:w-3/5 lg:w-5/12 xl:w-2/5'>
+      <div className='relative flex h-full w-full flex-col items-center justify-between children:px-3.5 md:w-3/5 lg:w-5/12 xl:w-2/5'>
         <ContactDetail />
         <Header />
         <MessageContainer />
