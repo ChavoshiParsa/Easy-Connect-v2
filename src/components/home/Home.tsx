@@ -5,24 +5,11 @@ import Topbar from '@/components/home/Topbar';
 import SearchField from '@/components/home/SearchField';
 import ActiveUser from '@/components/home/ActiveUser';
 import ChatList from '@/components/home/chat/ChatList';
-import { AppDispatch, useAppSelector } from '@/redux/store';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { setCredentials } from '@/redux/auth-slice';
-import { getLoggedUser } from '@/lib/users-action';
+import { useAppSelector } from '@/redux/store';
+import AllOtherUsers from './AllOtherUsers';
 
 export default function Home() {
-  const dispatch = useDispatch<AppDispatch>();
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const user = await getLoggedUser();
-      if (!user) return;
-      dispatch(setCredentials(user));
-    };
-    getUser();
-  }, [dispatch]);
 
   return (
     <main className='flex h-full flex-row items-center justify-start'>
@@ -34,6 +21,7 @@ export default function Home() {
         className='relative flex h-full w-full flex-col items-center justify-start bg-slate-100 children:px-2.5 
     dark:bg-zinc-800 md:w-2/5 md:border-r dark:md:border-r-zinc-950 lg:w-4/12 xl:w-2/5'
       >
+        <AllOtherUsers />
         <Topbar />
         <SearchField />
         <ActiveUser />

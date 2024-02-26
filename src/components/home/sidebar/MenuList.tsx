@@ -23,7 +23,6 @@ export default function MenuList() {
   async function logoutSubmitHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     await logout();
-    dispatch(clearCredentials());
     dispatch(
       setNotification({
         status: 'Success',
@@ -31,6 +30,7 @@ export default function MenuList() {
       })
     );
     router.push('/sign-in');
+    dispatch(clearCredentials());
   }
 
   return (

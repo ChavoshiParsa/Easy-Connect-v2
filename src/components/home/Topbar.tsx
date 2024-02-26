@@ -3,11 +3,14 @@ import Icon from '../ui/Icon';
 import { setIsMenuOpen } from '@/redux/ui-slice';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { useDispatch } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
 export default function Topbar() {
   const dispatch = useDispatch<AppDispatch>();
 
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
+
+  const router = useRouter();
   return (
     <div className='flex w-full items-center justify-between py-3'>
       <button
@@ -17,7 +20,7 @@ export default function Topbar() {
         <Icon name='hamburger-menu' size={30} dark={isDark} />
       </button>
       <h3 className='text-xl font-semibold'>Messages</h3>
-      <button onClick={() => {}}>
+      <button onClick={() => router.push('?all-users=true')}>
         <Icon
           name='new-chat'
           size={28}

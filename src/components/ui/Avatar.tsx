@@ -11,7 +11,7 @@ export default function Avatar({
   lastName: string;
   src: string;
   size: number;
-  online: boolean;
+  online?: boolean;
 }) {
   const ffl = firstName.charAt(0).toUpperCase();
   const lfl = lastName.charAt(0).toUpperCase();
@@ -22,7 +22,7 @@ export default function Avatar({
         <div className='absolute bottom-0.5 right-0.5  z-10 h-3 w-3 animate-pulse rounded-full border-2 border-zinc-50 bg-active dark:border-zinc-900 dark:bg-active-dark' />
       )}
       <div
-        className='relative flex items-center justify-center overflow-hidden rounded-full from-sky-300 via-sky-500 to-sky-700'
+        className='relative flex items-center justify-center overflow-hidden rounded-full'
         style={{
           width: `${size}px`,
           height: `${size}px`,
@@ -33,7 +33,7 @@ export default function Avatar({
           <Image
             style={{ width: `${size}px`, height: 'auto' }}
             src={src}
-            alt={`a portrait of ${lastName}`}
+            alt={`a portrait of ${firstName + ' ' + lastName}`}
             width={size}
             height={size}
           />
@@ -45,7 +45,7 @@ export default function Avatar({
   );
 }
 
-const gradientColors = [
+export const gradientColors = [
   'linear-gradient(to bottom, #7dd3fc, #0ea5e9, #0369a1)',
   'linear-gradient(to bottom, #fdba74, #f97316, #c2410c)',
   'linear-gradient(to bottom, #d8b4fe, #a855f7, #7e22ce)',
@@ -54,6 +54,6 @@ const gradientColors = [
   'linear-gradient(to bottom, #fda4af, #f43f5e, #be123c)',
 ];
 
-const grn = (min: number, max: number) => {
+export const grn = (min: number, max: number) => {
   return Math.floor(Math.random() * (max - min) + min);
 };

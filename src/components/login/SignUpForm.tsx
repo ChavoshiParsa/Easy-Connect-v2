@@ -8,10 +8,10 @@ import Input from '@/components/login/Input';
 import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
 import { useRouter } from 'next/navigation';
-import Modal from './Modal';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/redux/store';
 import { setNotification } from '@/redux/ui-slice';
+import RegisterForm from './RegisterForm';
 
 export default function SignUpForm() {
   const dispatch = useDispatch<AppDispatch>();
@@ -51,7 +51,10 @@ export default function SignUpForm() {
   return (
     <>
       {credentials && (
-        <Modal email={credentials.email} password={credentials.password} />
+        <RegisterForm
+          email={credentials.email}
+          password={credentials.password}
+        />
       )}
       <form
         className='flex h-full w-full items-center justify-center overflow-scroll bg-slate-50 p-1 dark:bg-zinc-900 md:p-3'

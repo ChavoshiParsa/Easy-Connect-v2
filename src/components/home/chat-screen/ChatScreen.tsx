@@ -9,6 +9,9 @@ import MessageContainer from '@/components/home/chat-screen/MessageContainer';
 import ChatList from '@/components/home/chat/ChatList';
 import Menu from '@/components/home/sidebar/Menu';
 import { useAppSelector } from '@/redux/store';
+import AllOtherUsers from '../AllOtherUsers';
+import ContactDetail from './ContactDetail';
+
 export default function ChatScreen() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
 
@@ -22,12 +25,14 @@ export default function ChatScreen() {
         className='relative hidden h-full flex-col items-center justify-start bg-slate-100 children:px-2.5 
         dark:bg-zinc-800 md:flex md:w-2/5 md:border-r dark:md:border-r-zinc-950 lg:w-4/12 xl:w-2/5'
       >
+        <AllOtherUsers />
         <Topbar />
         <SearchField />
         <ActiveUser />
         <ChatList />
       </div>
-      <div className='flex h-full flex-col items-center justify-between children:px-3.5 md:w-3/5 lg:w-5/12 xl:w-2/5'>
+      <div className='relative flex h-full flex-col items-center justify-between children:px-3.5 md:w-3/5 lg:w-5/12 xl:w-2/5'>
+        <ContactDetail />
         <Header />
         <MessageContainer />
         <InputField />

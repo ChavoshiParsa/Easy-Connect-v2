@@ -15,7 +15,7 @@ import { deletePhoto } from '@/lib/photo-action';
 
 const SIZE = 1024;
 
-export default function Modal({
+export default function RegisterForm({
   email,
   password,
 }: {
@@ -103,8 +103,8 @@ export default function Modal({
 
   return (
     <dialog
-      className={`${isDark && 'dark'} z-40 flex h-full w-full
-       items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm dark:bg-white dark:bg-opacity-40`}
+      className={`${isDark && 'dark'} z-40 flex h-full w-full items-center justify-center
+       bg-black bg-opacity-40 backdrop-blur-sm dark:bg-white dark:bg-opacity-40`}
     >
       <form
         className='mx-2 flex w-[640px] flex-col items-center justify-center space-y-4
@@ -112,7 +112,7 @@ export default function Modal({
         onSubmit={formSubmitHandler}
       >
         <div className='flex w-full flex-col items-start justify-center space-y-1 md:space-y-2 '>
-          <h3 className='text-2xl font-bold md:text-4xl'>One more step:</h3>
+          <h3 className='text-2xl font-bold md:text-4xl'>One more step</h3>
           <p className='text-sm md:text-lg'>
             Complete your profile to make a memorable impression on others.
           </p>

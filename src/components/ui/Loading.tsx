@@ -1,5 +1,8 @@
-export default function Loading() {
+export default function Loading({ size }: { size?: number }) {
   return (
-    <div className='size-12 animate-spin rounded-full border-[6px] border-slate-100 border-r-purlue' />
+    <div
+      className='animate-spin rounded-full border-[6px] border-slate-100 border-r-purlue'
+      style={{ width: `${size || 48}px`, height: `${size || 48}px` }}
+    />
   );
 }
