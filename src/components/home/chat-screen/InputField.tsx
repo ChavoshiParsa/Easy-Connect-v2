@@ -1,19 +1,38 @@
 import Icon from '@/components/ui/Icon';
 import { sendMessage } from '@/lib/connect-action';
-import { useAppSelector } from '@/redux/store';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { setNotification } from '@/redux/ui-slice';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 export default function InputField() {
+  const dispatch = useDispatch<AppDispatch>();
+
   const senderId = useAppSelector((state) => state.authReducer.credentials.id);
-  const [message, setMessage] = useState('');
+  const loading = useAppSelector((state) => state.authReducer.loading);
   const params = useParams<{ contact: string }>();
+
+  const [message, setMessage] = useState('');
+
+  // error state
+  // loading state
 
   async function sendMessageHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    const result = await sendMessage(senderId, params.contact, message);
-    console.log(result);
+    if (loading) return;
+    try {
+      // loading state
+      await sendMessage(senderId, params.contact, message);
+      // updating ui - message slice
+    } catch (error: any) {
+      dispatch(
+        setNotification({
+          status: 'Error',
+          message: error.message,
+        })
+      );
+    }
   }
 
   return (

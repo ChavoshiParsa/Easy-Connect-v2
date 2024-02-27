@@ -1,12 +1,13 @@
 import Icon from '@/components/ui/Icon';
 
-type Message = {
+export type MessageType = {
+  id: string;
   text: string;
   time: string;
   status?: 'sent' | 'seen' | 'pending';
 };
 
-export default function Message({ text, time, status }: Message) {
+export default function Message({ text, time, status }: MessageType) {
   return (
     <div
       className='flex w-4/5 max-w-max flex-col space-y-1.5 px-3 pb-1 pt-2.5 leading-5'
@@ -19,9 +20,16 @@ export default function Message({ text, time, status }: Message) {
     >
       <span>{text}</span>
       <div className='flex items-center justify-end space-x-0.5 text-xs'>
-        <span>{time}</span>
+        <span>{formatTime(new Date(time))}</span>
         {status && <Icon name={status} size={22} color='#FFFFFF' />}
       </div>
     </div>
   );
+}
+
+function formatTime(createdAt: Date): string {
+  return createdAt.toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
 }

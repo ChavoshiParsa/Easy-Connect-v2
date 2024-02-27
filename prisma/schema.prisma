@@ -42,6 +42,6 @@ model Message {
 }
 
 enum Status {
-  SEEN
-  SENT
+  seen
+  sent
 }

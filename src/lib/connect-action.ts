@@ -1,6 +1,6 @@
 'use server';
 
-import { create } from 'domain';
+import { MessageType } from '@/components/home/chat-screen/Message';
 import { prisma } from '../../prisma/prisma';
 
 export async function sendMessage(
@@ -8,12 +8,12 @@ export async function sendMessage(
   receiverId: string,
   text: string
 ) {
-  let sender = await prisma.user.findUnique({
+  const sender = await prisma.user.findUnique({
     where: { id: senderId },
     select: { chats: true },
   });
 
-  let prevChat = sender?.chats.find((c) => c.receiverId === receiverId);
+  const prevChat = sender?.chats.find((c) => c.receiverId === receiverId);
 
   if (prevChat === undefined) {
     // no chat before
@@ -24,7 +24,7 @@ export async function sendMessage(
         chats: {
           create: {
             receiverId: receiverId,
-            messages: { create: { status: 'SENT', text } },
+            messages: { create: { status: 'sent', text } },
           },
         },
       },
@@ -52,19 +52,19 @@ export async function sendMessage(
           update: {
             where: { id: prevChat.id },
             data: {
-              messages: { create: { status: 'SENT', text } },
+              messages: { create: { status: 'sent', text } },
             },
           },
         },
       },
     });
     // new message from sender to receiver
-    let receiver = await prisma.user.findUnique({
+    const receiver = await prisma.user.findUnique({
       where: { id: receiverId },
       select: { chats: true },
     });
 
-    let chat = receiver?.chats.find((c) => c.receiverId === senderId);
+    const chat = receiver?.chats.find((c) => c.receiverId === senderId);
 
     await prisma.user.update({
       where: { id: receiverId },
@@ -80,5 +80,77 @@ export async function sendMessage(
         unreadMessages: { increment: 1 },
       },
     });
+  }
+}
+
+export default async function getMessages(userId: string, contactId: string) {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { chats: true },
+  });
+
+  const isAnyChat = user?.chats.find((c) => c.receiverId === contactId);
+
+  if (isAnyChat === undefined) {
+    return [];
+  } else {
+    const userChats = await prisma.user.findFirst({
+      where: { id: userId },
+      select: {
+        chats: {
+          where: {
+            senderId: userId,
+            AND: {
+              receiverId: contactId,
+            },
+          },
+          select: { messages: true },
+        },
+      },
+    });
+    const contactChats = await prisma.user.findFirst({
+      where: { id: contactId },
+      select: {
+        chats: {
+          where: {
+            senderId: contactId,
+            AND: {
+              receiverId: userId,
+            },
+          },
+          select: { messages: true },
+        },
+      },
+    });
+
+    const transformedUserMessages: MessageType[] =
+      userChats?.chats[0]?.messages?.map(({ id, text, createdAt, status }) => {
+        return {
+          id,
+          text,
+          time: createdAt.toString(),
+          status,
+        };
+      }) ?? [];
+
+    const transformedContactMessages: MessageType[] =
+      contactChats?.chats[0]?.messages.map(({ id, text, createdAt }) => {
+        return {
+          id,
+          text,
+          time: createdAt.toString(),
+        };
+      }) ?? [];
+
+    const mergedMessages = [
+      ...transformedUserMessages,
+      ...transformedContactMessages,
+    ];
+
+    mergedMessages.sort(
+      (a, b) => new Date(a.time).getTime() - new Date(b.time).getTime()
+    );
+
+    return mergedMessages;
   }
 }
