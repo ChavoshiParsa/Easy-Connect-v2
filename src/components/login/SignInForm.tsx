@@ -6,7 +6,7 @@ import Header from '@/components/login/Header';
 import Input from '@/components/login/Input';
 import MainImage from '@/components/login/MainImage';
 import RedirectLink from '@/components/login/RedirectLink';
-import { authenticate } from '@/lib/auth-action';
+import { authenticate } from '@/actions/auth-action';
 import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/redux/store';
 import { useDispatch } from 'react-redux';

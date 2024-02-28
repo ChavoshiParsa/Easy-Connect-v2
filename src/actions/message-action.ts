@@ -2,16 +2,18 @@
 
 import { MessageType } from '@/components/home/chat-screen/Message';
 import { prisma } from '../../prisma/prisma';
+import { auth } from '@/auth';
 
-export async function sendMessage(
-  senderId: string,
-  receiverId: string,
-  text: string
-) {
+export async function sendMessage(receiverId: string, text: string) {
+  const session = await auth();
+  if (!session?.user?.email) return [];
+
   const sender = await prisma.user.findUnique({
-    where: { id: senderId },
-    select: { chats: true },
+    where: { email: session?.user?.email },
+    select: { chats: true, id: true },
   });
+
+  if (!sender?.id) return [];
 
   const prevChat = sender?.chats.find((c) => c.receiverId === receiverId);
 
@@ -19,11 +21,11 @@ export async function sendMessage(
     // no chat before
     // connect sender to receiver
     await prisma.user.update({
-      where: { id: senderId },
+      where: { id: sender?.id },
       data: {
         chats: {
           create: {
-            receiverId: receiverId,
+            receiverId,
             messages: { create: { status: 'sent', text } },
           },
         },
@@ -35,7 +37,7 @@ export async function sendMessage(
       data: {
         chats: {
           create: {
-            receiverId: senderId,
+            receiverId: sender?.id,
             newMessages: 1,
           },
         },
@@ -46,7 +48,7 @@ export async function sendMessage(
     // already chat
     // message sender to receiver
     await prisma.user.update({
-      where: { id: senderId },
+      where: { id: sender?.id },
       data: {
         chats: {
           update: {
@@ -64,7 +66,7 @@ export async function sendMessage(
       select: { chats: true },
     });
 
-    const chat = receiver?.chats.find((c) => c.receiverId === senderId);
+    const chat = receiver?.chats.find((c) => c.receiverId === sender?.id);
 
     await prisma.user.update({
       where: { id: receiverId },
@@ -83,11 +85,16 @@ export async function sendMessage(
   }
 }
 
-export default async function getMessages(userId: string, contactId: string) {
+export default async function getMessages(contactId: string) {
+  const session = await auth();
+  if (!session?.user?.email) return [];
+
   const user = await prisma.user.findUnique({
-    where: { id: userId },
-    select: { chats: true },
+    where: { email: session?.user?.email },
+    select: { chats: true, id: true },
   });
+
+  if (!user?.id) return [];
 
   const isAnyChat = user?.chats.find((c) => c.receiverId === contactId);
 
@@ -95,11 +102,11 @@ export default async function getMessages(userId: string, contactId: string) {
     return [];
   } else {
     const userChats = await prisma.user.findFirst({
-      where: { id: userId },
+      where: { id: user?.id },
       select: {
         chats: {
           where: {
-            senderId: userId,
+            senderId: user?.id,
             AND: {
               receiverId: contactId,
             },
@@ -115,7 +122,7 @@ export default async function getMessages(userId: string, contactId: string) {
           where: {
             senderId: contactId,
             AND: {
-              receiverId: userId,
+              receiverId: user?.id,
             },
           },
           select: { messages: true },

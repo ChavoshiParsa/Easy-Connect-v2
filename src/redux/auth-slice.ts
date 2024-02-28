@@ -1,4 +1,5 @@
-import { getLoggedUser } from '@/lib/users-action';
+import { getLoggedUser } from '@/actions/users-action';
+import { Theme } from '@prisma/client';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export const getInitialAuthData = createAsyncThunk(
@@ -22,6 +23,8 @@ export type AuthState = {
     username: string;
     email: string;
     isOnline: boolean;
+    unreadMessages: number;
+    theme: Theme;
   };
   loading: boolean;
   error: string | null;
@@ -37,6 +40,8 @@ const initialState: AuthState = {
     username: '',
     email: '',
     isOnline: false,
+    unreadMessages: 0,
+    theme: 'red',
   },
   loading: true,
   error: null,
@@ -55,6 +60,8 @@ const authSlice = createSlice({
       state.credentials.username = '';
       state.credentials.email = '';
       state.credentials.isOnline = false;
+      state.credentials.unreadMessages = 0;
+      state.credentials.theme = 'red';
       state.loading = false;
       state.error = null;
     },
@@ -77,6 +84,8 @@ const authSlice = createSlice({
           state.credentials.username = action.payload.username;
           state.credentials.email = action.payload.email;
           state.credentials.isOnline = action.payload.isOnline;
+          state.credentials.unreadMessages = action.payload.unreadMessages;
+          state.credentials.theme = action.payload.theme;
         }
       })
       .addCase(getInitialAuthData.rejected, (state, action) => {

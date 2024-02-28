@@ -1,79 +1,65 @@
-import { gradientColors, grn } from '@/components/ui/Avatar';
 import Icon from '@/components/ui/Icon';
-import { getSingleUser } from '@/lib/users-action';
-import { AuthState } from '@/redux/auth-slice';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { setNotification } from '@/redux/ui-slice';
+import { gradientColors } from '@/utils/color-theme';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 export default function ContactDetail() {
-  const [contact, setContact] = useState<AuthState['credentials'] | null>(null);
+  const params = useParams<{ contact: string }>();
 
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
+  const users = useAppSelector((state) => state.usersReducer.usersCredentials);
 
   const searchParams = useSearchParams();
   const nextStep = searchParams.get('contact-detail');
-  const params = useParams<{ contact: string }>();
   const pathname = usePathname();
 
-  useEffect(() => {
-    async function fetchContact() {
-      try {
-        const user = await getSingleUser(params.contact);
-        setContact(user);
-      } catch (error) {
-        console.error('Error fetching user:', error);
-        setContact(null);
-      }
-    }
+  const user = users.find((cred) => cred.id === params.contact);
 
-    fetchContact();
-  }, [params.contact]);
+  if (!nextStep || !user) return;
 
-  if (!nextStep || !contact) return;
-
-  const ffl = contact.firstName.charAt(0).toUpperCase();
-  const lfl = contact.lastName.charAt(0).toUpperCase();
+  const ffl = user.firstName.charAt(0).toUpperCase();
+  const lfl = user.lastName.charAt(0).toUpperCase();
 
   return (
     <dialog
       className={`${isDark && 'dark'} z-40 flex h-full w-full items-center justify-center bg-black
-       bg-opacity-20 px-2 py-20  backdrop-blur-sm dark:bg-white dark:bg-opacity-20 xs:px-12 xs:py-3 sm:px-28 sm:py-4 md:px-12 md:py-8`}
+       bg-opacity-20 px-6 py-8 backdrop-blur-sm dark:bg-white dark:bg-opacity-20`}
     >
       <div className='flex size-full flex-col items-center justify-start overflow-hidden rounded-xl bg-slate-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-100'>
         <div
           className='relative flex h-1/2 w-full items-center justify-center'
           style={{
-            backgroundImage: `${contact.profileUrl === '' ? gradientColors[grn(0, gradientColors.length)] : ''}`,
+            backgroundImage: `${user.profileUrl === '' ? gradientColors[user.theme] : ''}`,
           }}
         >
-          {contact.profileUrl !== '' ? (
+          {user.profileUrl !== '' ? (
             <>
               <Image
-                className='object-cover object-center'
-                src={contact.profileUrl}
-                alt={`a portrait of ${contact.firstName + ' ' + contact.lastName}`}
+                style={{ objectFit: 'contain' }}
+                src={user.profileUrl}
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                alt={`a portrait of ${user.firstName + ' ' + user.lastName}`}
                 fill
                 priority
               />
-              <div className='absolute z-20 h-full w-full bg-gradient-to-t from-[#0000008e] from-10% via-transparent to-transparent' />
+              <div className='absolute z-20 h-full w-full bg-gradient-to-t from-[#00000076] from-5% via-transparent to-transparent' />
             </>
           ) : (
             <span className='text-5xl text-white'>{ffl + lfl}</span>
           )}
-          <span className='absolute bottom-7 left-5 z-20 text-2xl text-white'>
-            {contact.firstName + ' ' + contact.lastName}
+          <span className='absolute bottom-8 left-5 z-20 text-3xl text-white'>
+            {user.firstName + ' ' + user.lastName}
           </span>
-          {contact.isOnline ? (
-            <span className='absolute bottom-3 left-5 z-20 text-xs text-emerald-300'>
+          {user.isOnline ? (
+            <span className='absolute bottom-3 left-5 z-20 text-sm text-emerald-300'>
               Online
             </span>
           ) : (
-            <span className='absolute bottom-3 left-5 z-20 text-xs text-slate-300'>
+            <span className='absolute bottom-3 left-5 z-20 text-sm text-slate-300'>
               last seen recently
             </span>
           )}
@@ -81,21 +67,21 @@ export default function ContactDetail() {
         <div className='flex w-full flex-col items-start justify-start space-y-1 p-4 hover:children:bg-slate-100 hover:children:dark:bg-zinc-800'>
           <InfoComponent
             icon='email'
-            info={contact.email}
+            info={user.email}
             name='Email'
-            size={30}
+            size={26}
           />
           <InfoComponent
             icon='username'
-            info={contact.username}
+            info={user.username}
             name='Username'
-            size={30}
+            size={26}
           />
           <InfoComponent
             icon='info'
-            info={contact.biography}
+            info={user.biography}
             name='Bio'
-            size={30}
+            size={26}
           />
         </div>
         <Link
@@ -155,7 +141,7 @@ const InfoComponent = ({
       <Icon name={icon} size={size} dark={isDark} />
       <div className='flex flex-col items-start justify-center'>
         <h3
-          className='text-xl text-zinc-800 dark:text-slate-100'
+          className='text-lg text-zinc-800 dark:text-slate-100'
           style={{ fontSize: `${name === 'Bio' && '15px'}` }}
         >
           {info}

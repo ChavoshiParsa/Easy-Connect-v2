@@ -1,4 +1,3 @@
-'use client';
 import Icon from '../ui/Icon';
 import { setIsMenuOpen } from '@/redux/ui-slice';
 import { AppDispatch, useAppSelector } from '@/redux/store';
@@ -12,7 +11,7 @@ export default function Topbar() {
 
   const router = useRouter();
   return (
-    <div className='flex w-full items-center justify-between py-3'>
+    <div className='flex w-full items-center justify-between px-2.5 py-3'>
       <button
         className='lg:hidden'
         onClick={() => dispatch(setIsMenuOpen(true))}

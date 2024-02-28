@@ -1,4 +1,4 @@
-import { getOtherUsers } from '@/lib/users-action';
+import { getOtherUsers } from '@/actions/users-action';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AuthState } from './auth-slice';
 

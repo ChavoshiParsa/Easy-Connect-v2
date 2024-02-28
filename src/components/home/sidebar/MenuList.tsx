@@ -1,8 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import Icon from '@/components/ui/Icon';
 import { FormEvent, useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { logout } from '@/lib/auth-action';
+import { logout } from '@/actions/auth-action';
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { setIsMenuOpen, setNotification } from '@/redux/ui-slice';
@@ -16,7 +18,12 @@ export default function MenuList() {
 
   const dispatch = useDispatch<AppDispatch>();
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
-  const firstName = useAppSelector((state) => state.authReducer.firstName);
+  const unreadMessages = useAppSelector(
+    (state) => state.authReducer.credentials.unreadMessages
+  );
+  const firstName = useAppSelector(
+    (state) => state.authReducer.credentials.firstName
+  );
 
   const router = useRouter();
 
@@ -29,8 +36,8 @@ export default function MenuList() {
         message: `Logout successful! See you later, ${firstName}.`,
       })
     );
-    router.push('/sign-in');
     dispatch(clearCredentials());
+    router.push('/sign-in');
   }
 
   return (
@@ -70,11 +77,13 @@ export default function MenuList() {
           dark={isDark}
         />
         <span style={{ color: `${path === '/home/messages' && '#6A4DFF'}` }}>
-          Messages
+          Unread Messages
         </span>
-        <span className='flex h-5 w-5 items-center justify-center rounded-full bg-purlue text-xs text-white dark:bg-purlue-dark'>
-          2
-        </span>
+        {unreadMessages !== 0 && (
+          <span className='flex h-5 w-5 items-center justify-center rounded-full bg-purlue text-xs text-white '>
+            {unreadMessages}
+          </span>
+        )}
       </Link>
       <div
         className='w-full space-y-4 hover:bg-indigo-100 dark:hover:bg-indigo-950'

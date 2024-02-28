@@ -1,16 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
-import Message, { MessageType } from './Message';
-import getMessages from '@/lib/connect-action';
-import { useAppSelector } from '@/redux/store';
+import { useEffect, useRef } from 'react';
+import Message from './Message';
 import { useParams } from 'next/navigation';
+import Loading from '@/components/ui/Loading';
+import { useAppSelector } from '@/redux/store';
 
 export default function MessageContainer() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const userId = useAppSelector((state) => state.authReducer.credentials.id);
-  const loading = useAppSelector((state) => state.authReducer.loading);
   const params = useParams<{ contact: string }>();
-  // messages state and select with
-  const [messages, setMessages] = useState<MessageType[]>([]);
+  const loading = useAppSelector((state) => state.messagesReducer.loading);
+  const messagesContacts = useAppSelector(
+    (state) => state.messagesReducer.messagesContact
+  );
+
+  const messagesContact = messagesContacts?.find(
+    (cred) => cred.contactId === params.contact
+  );
+
+  const messages = messagesContact?.messages;
 
   function handleScreen() {
     if (scrollRef.current) {
@@ -24,26 +30,16 @@ export default function MessageContainer() {
     return () => {
       window.removeEventListener('resize', handleScreen);
     };
-  }, [scrollRef.current?.scrollHeight]);
+  }, [scrollRef.current?.scrollHeight, loading, messages]);
 
-  useEffect(() => {
-    async function fetchContact() {
-      if (loading) return;
-      try {
-        const messages = await getMessages(userId, params.contact);
-        setMessages(messages);
-      } catch (error) {
-        setMessages([]);
-      }
-    }
+  if (loading)
+    return (
+      <div className='my-8 flex flex-row items-center justify-center space-x-3'>
+        <Loading />
+      </div>
+    );
 
-    fetchContact();
-  }, [params.contact, userId, loading]);
-
-  // get message from message slice
-  // updating ui when message send with sockets
-  // first initial with prisma
-  // get realtime messages with sockets
+  if (!messages) return;
 
   return (
     <div className='z-10 mt-auto w-full overflow-y-scroll' ref={scrollRef}>

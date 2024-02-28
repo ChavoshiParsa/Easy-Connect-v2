@@ -5,6 +5,7 @@ import { AuthError } from 'next-auth';
 import { prisma } from '../../prisma/prisma';
 import { z } from 'zod';
 import { hashSync } from 'bcrypt-ts';
+import { colorNames, grn } from '@/utils/color-theme';
 
 export async function logout() {
   await signOut();
@@ -108,6 +109,7 @@ export async function register(formData: {
           lastName,
           profileUrl: photoUrl,
           biography: bio,
+          theme: colorNames[grn(0, colorNames.length)],
         },
       });
     } else return 'Please provide valid credentials.';

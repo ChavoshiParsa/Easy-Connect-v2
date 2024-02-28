@@ -27,8 +27,9 @@ export default function ActiveUser() {
                   firstName={user.firstName}
                   lastName={user.lastName}
                   src={user.profileUrl}
-                  size={54}
                   online={true}
+                  theme={user.theme}
+                  size={54}
                 />
               </Link>
             ))}

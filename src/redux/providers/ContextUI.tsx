@@ -1,17 +1,15 @@
 import { useCallback, useEffect, useLayoutEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { AppDispatch, useAppSelector } from './store';
-import { setIsDark, setIsMenuOpen, setNotification } from './ui-slice';
+import { AppDispatch, useAppSelector } from '../store';
+import { setIsDark, setIsMenuOpen, setNotification } from '../ui-slice';
 
 let firstTime = true;
 
-export const ContextProvider: React.FC<{
+export const ContextUI: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const isDark = useAppSelector((state) => state.uiReducer.isDark);
-  const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
   const notification = useAppSelector((state) => state.uiReducer.notification);
 
   useEffect(() => {
@@ -23,6 +21,8 @@ export const ContextProvider: React.FC<{
       clearTimeout(timer);
     };
   }, [notification, dispatch]);
+
+  const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   useLayoutEffect(() => {
     if (firstTime) {
@@ -43,6 +43,8 @@ export const ContextProvider: React.FC<{
     if (window.innerWidth > 1024) dispatch(setIsMenuOpen(false));
   }, [dispatch]);
 
+  const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
+
   useEffect(() => {
     window.addEventListener('resize', handleResize);
 
@@ -54,6 +56,10 @@ export const ContextProvider: React.FC<{
   useEffect(() => {
     handleResize();
   }, [handleResize]);
+
+  const credentialId = useAppSelector(
+    (state) => state.authReducer.credentials.id
+  );
 
   return <>{children}</>;
 };

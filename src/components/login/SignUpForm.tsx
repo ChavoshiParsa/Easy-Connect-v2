@@ -1,6 +1,6 @@
 'use client';
 
-import { validateEmailPass } from '@/lib/auth-action';
+import { validateEmailPass } from '@/actions/auth-action';
 import { FormEvent, useRef, useState } from 'react';
 import { SubmitButton } from '@/components/login/SubmitButton';
 import Header from '@/components/login/Header';

@@ -16,6 +16,7 @@ model User {
   username       String   @unique
   email          String   @unique
   password       String
+  theme          Theme
   unreadMessages Int      @default(0)
   isOnline       Boolean  @default(false)
   lastSeen       DateTime @default(now())
@@ -44,4 +45,24 @@ model Message {
 enum Status {
   seen
   sent
+}
+
+enum Theme {
+  red
+  orange
+  amber
+  yellow
+  lime
+  green
+  emerald
+  teal
+  cyan
+  sky
+  blue
+  indigo
+  violet
+  purple
+  fuchsia
+  pink
+  rose
 }

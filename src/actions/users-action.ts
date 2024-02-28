@@ -19,6 +19,8 @@ export async function getLoggedUser() {
         username: true,
         email: true,
         isOnline: true,
+        unreadMessages: true,
+        theme: true,
       },
     });
   } catch (error) {
@@ -46,6 +48,8 @@ export async function getOtherUsers() {
         username: true,
         email: true,
         isOnline: true,
+        unreadMessages: true,
+        theme: true,
       },
     });
   } catch (error) {
@@ -69,6 +73,8 @@ export async function getSingleUser(id: string) {
         username: true,
         email: true,
         isOnline: true,
+        unreadMessages: true,
+        theme: true,
       },
     });
     return user;

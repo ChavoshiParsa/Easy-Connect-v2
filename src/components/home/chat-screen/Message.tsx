@@ -27,7 +27,7 @@ export default function Message({ text, time, status }: MessageType) {
   );
 }
 
-function formatTime(createdAt: Date): string {
+export function formatTime(createdAt: Date): string {
   return createdAt.toLocaleTimeString([], {
     hour: 'numeric',
     minute: '2-digit',

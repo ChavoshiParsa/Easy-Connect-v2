@@ -6,7 +6,7 @@ import Alert from '@/components/ui/Alert';
 import { NextSSRPlugin } from '@uploadthing/react/next-ssr-plugin';
 import { extractRouterConfig } from 'uploadthing/server';
 import { ourFileRouter } from './api/uploadthing/core';
-import { Provider } from '@/redux/provider';
+import { Provider } from '@/redux/providers/Provider';
 
 const inter = Varela_Round({ subsets: ['latin'], weight: '400' });
 

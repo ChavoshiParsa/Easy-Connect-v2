@@ -1,6 +1,6 @@
 'use client';
 
-import { register, validateUsername } from '@/lib/auth-action';
+import { register, validateUsername } from '@/actions/auth-action';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileInput from './ProfileInput';
 import { FormEvent, useEffect, useRef, useState } from 'react';
@@ -11,7 +11,7 @@ import CustomUploader from './CustomUploader';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { useDispatch } from 'react-redux';
 import { setNotification } from '@/redux/ui-slice';
-import { deletePhoto } from '@/lib/photo-action';
+import { deletePhoto } from '@/actions/photo-action';
 
 const SIZE = 1024;
 

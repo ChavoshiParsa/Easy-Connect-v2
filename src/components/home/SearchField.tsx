@@ -5,7 +5,7 @@ export default function SearchField() {
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   return (
-    <div className='relative mb-4 w-full'>
+    <div className='relative mb-4 w-full px-2.5'>
       <div className='absolute right-5 top-3.5'>
         <Icon name='magnifier' size={20} color='#a1a1aa' dark={isDark} />
       </div>

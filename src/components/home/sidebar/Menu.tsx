@@ -1,5 +1,3 @@
-'use client';
-
 import Menubar from './Menubar';
 import Backdrop from '@/components/ui/Backdrop';
 

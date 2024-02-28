@@ -1,5 +1,5 @@
 import Icon from '@/components/ui/Icon';
-import { sendMessage } from '@/lib/connect-action';
+import { sendMessage } from '@/actions/message-action';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { setNotification } from '@/redux/ui-slice';
 import { useParams } from 'next/navigation';
@@ -23,7 +23,8 @@ export default function InputField() {
     if (loading) return;
     try {
       // loading state
-      await sendMessage(senderId, params.contact, message);
+      setMessage('');
+      await sendMessage(params.contact, message);
       // updating ui - message slice
     } catch (error: any) {
       dispatch(
@@ -46,6 +47,7 @@ export default function InputField() {
         type='text'
         name='message-field'
         onChange={(e) => setMessage(e.target.value)}
+        value={message}
         autoComplete='off'
         required
       />

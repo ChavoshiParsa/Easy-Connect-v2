@@ -22,8 +22,8 @@ export default function ChatScreen() {
         <Menu />
       </div>
       <div
-        className='relative hidden h-full flex-col items-center justify-start bg-slate-100 children:px-2.5 
-        dark:bg-zinc-800 md:flex md:w-2/5 md:border-r dark:md:border-r-zinc-950 lg:w-4/12 xl:w-2/5'
+        className='relative hidden h-full flex-col items-center justify-start bg-slate-100 
+      dark:bg-zinc-800 md:flex md:w-2/5 md:border-r dark:md:border-r-zinc-950 lg:w-4/12 xl:w-2/5'
       >
         <AllOtherUsers />
         <Topbar />

@@ -1,22 +1,10 @@
 import Avatar from '@/components/ui/Avatar';
 import Loading from '@/components/ui/Loading';
-import { AppDispatch, useAppSelector } from '@/redux/store';
-import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
-import { getInitialAuthData } from '@/redux/auth-slice';
-import { setNotification } from '@/redux/ui-slice';
+import { useAppSelector } from '@/redux/store';
 
 export default function Profile() {
   const credentials = useAppSelector((state) => state.authReducer.credentials);
   const loading = useAppSelector((state) => state.authReducer.loading);
-
-  const dispatch = useDispatch<AppDispatch>();
-  const error = useAppSelector((state) => state.authReducer.error);
-
-  useEffect(() => {
-    dispatch(getInitialAuthData());
-    if (error) dispatch(setNotification({ status: 'Error', message: error }));
-  }, [dispatch, error]);
 
   if (loading)
     return (
@@ -31,6 +19,7 @@ export default function Profile() {
         firstName={credentials.firstName}
         lastName={credentials.lastName}
         src={credentials.profileUrl}
+        theme={credentials.theme}
         size={60}
       />
       <div className='flex flex-col items-start justify-between space-y-1'>

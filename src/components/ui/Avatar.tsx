@@ -1,3 +1,5 @@
+import { gradientColors } from '@/utils/color-theme';
+import { Theme } from '@prisma/client';
 import Image from 'next/image';
 
 export default function Avatar({
@@ -6,12 +8,14 @@ export default function Avatar({
   src,
   size,
   online,
+  theme,
 }: {
   firstName: string;
   lastName: string;
   src: string;
   size: number;
   online?: boolean;
+  theme: Theme;
 }) {
   const ffl = firstName.charAt(0).toUpperCase();
   const lfl = lastName.charAt(0).toUpperCase();
@@ -26,16 +30,17 @@ export default function Avatar({
         style={{
           width: `${size}px`,
           height: `${size}px`,
-          backgroundImage: `${src === '' ? gradientColors[grn(0, gradientColors.length)] : ''}`,
+          backgroundImage: `${src === '' ? gradientColors[theme] : ''}`,
         }}
       >
         {src !== '' ? (
           <Image
-            style={{ width: `${size}px`, height: 'auto' }}
+            style={{ objectFit: 'contain' }}
             src={src}
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
             alt={`a portrait of ${firstName + ' ' + lastName}`}
-            width={size}
-            height={size}
+            fill
+            priority
           />
         ) : (
           <span className='text-slate-50'>{ffl + lfl}</span>
@@ -44,16 +49,3 @@ export default function Avatar({
     </div>
   );
 }
-
-export const gradientColors = [
-  'linear-gradient(to bottom, #7dd3fc, #0ea5e9, #0369a1)',
-  'linear-gradient(to bottom, #fdba74, #f97316, #c2410c)',
-  'linear-gradient(to bottom, #d8b4fe, #a855f7, #7e22ce)',
-  'linear-gradient(to bottom, #6ee7b7, #10b981, #047857)',
-  'linear-gradient(to bottom, #a5b4fc, #6366f1, #4338ca)',
-  'linear-gradient(to bottom, #fda4af, #f43f5e, #be123c)',
-];
-
-export const grn = (min: number, max: number) => {
-  return Math.floor(Math.random() * (max - min) + min);
-};
