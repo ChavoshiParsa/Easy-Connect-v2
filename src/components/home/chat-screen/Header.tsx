@@ -6,10 +6,9 @@ import { socket } from '@/socket';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { formatTimeStatus } from './Message';
 
 export default function Header() {
-  // const dispatch = useDispatch<AppDispatch>();
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
   const params = useParams<{ contact: string }>();
   const router = useRouter();
@@ -25,7 +24,7 @@ export default function Header() {
       if (senderId === params.contact) setIsTyping(true);
       activityTimer = setTimeout(() => {
         setIsTyping(false);
-      }, 1000);
+      }, 2000);
     });
 
     return () => {
@@ -33,10 +32,6 @@ export default function Header() {
       clearTimeout(activityTimer);
     };
   }, [params.contact]);
-
-  // useEffect(() => {
-  //   dispatch(startAutoRefresh());
-  // }, [dispatch]);
 
   return (
     <div className='z-20 flex w-full flex-row items-center justify-between bg-slate-50 py-2 shadow-lg dark:bg-zinc-900'>
@@ -67,7 +62,9 @@ export default function Header() {
             ) : user.isOnline ? (
               <span className='text-sm text-emerald-400'>online</span>
             ) : (
-              <span className='text-sm text-slate-400'>last seen recently</span>
+              <span className='text-sm text-slate-400'>
+                {`last seen at ${formatTimeStatus(user.lastSeen)}`}
+              </span>
             )}
           </div>
         </div>

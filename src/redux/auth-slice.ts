@@ -25,6 +25,7 @@ export type AuthState = {
     isOnline: boolean;
     unreadMessages: number;
     theme: Theme;
+    lastSeen: string;
   };
   loading: boolean;
   error: string | null;
@@ -42,6 +43,7 @@ const initialState: AuthState = {
     isOnline: false,
     unreadMessages: 0,
     theme: 'red',
+    lastSeen: Date.now().toString(),
   },
   loading: true,
   error: null,
@@ -62,6 +64,7 @@ const authSlice = createSlice({
       state.credentials.isOnline = false;
       state.credentials.unreadMessages = 0;
       state.credentials.theme = 'red';
+      state.credentials.lastSeen = Date.now().toString();
       state.loading = false;
       state.error = null;
     },
@@ -76,16 +79,7 @@ const authSlice = createSlice({
         state.loading = false;
         state.error = null;
         if (action.payload) {
-          state.credentials.id = action.payload.id;
-          state.credentials.firstName = action.payload.firstName;
-          state.credentials.lastName = action.payload.lastName;
-          state.credentials.profileUrl = action.payload.profileUrl;
-          state.credentials.biography = action.payload.biography;
-          state.credentials.username = action.payload.username;
-          state.credentials.email = action.payload.email;
-          state.credentials.isOnline = action.payload.isOnline;
-          state.credentials.unreadMessages = action.payload.unreadMessages;
-          state.credentials.theme = action.payload.theme;
+          state.credentials = action.payload;
         }
       })
       .addCase(getInitialAuthData.rejected, (state, action) => {

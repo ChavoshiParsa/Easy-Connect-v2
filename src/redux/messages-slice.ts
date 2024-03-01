@@ -34,7 +34,43 @@ const initialState: UsersState = {
 const usersSlice = createSlice({
   name: 'messages',
   initialState,
-  reducers: {},
+  reducers: {
+    addMessageFromContact(
+      state,
+      action: PayloadAction<{
+        senderId: string;
+        message: string;
+      }>
+    ) {
+      const index = state.messagesContact.findIndex(
+        (chat) => chat.contactId === action.payload.senderId
+      );
+      if (index === -1) return;
+      state.messagesContact[index].messages.push({
+        id: `${action.payload.message}-${new Date()}`,
+        text: action.payload.message,
+        time: new Date().toISOString(),
+      });
+    },
+    addMessageFromUser(
+      state,
+      action: PayloadAction<{
+        contactId: string;
+        message: string;
+      }>
+    ) {
+      const index = state.messagesContact.findIndex(
+        (chat) => chat.contactId === action.payload.contactId
+      );
+      if (index === -1) return;
+      state.messagesContact[index].messages.push({
+        id: `${action.payload.message}-${Date.now()}`,
+        text: action.payload.message,
+        time: new Date().toISOString(),
+        status: 'sent',
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getInitialMessagesData.pending, (state) => {
@@ -53,6 +89,6 @@ const usersSlice = createSlice({
   },
 });
 
-export const {} = usersSlice.actions;
+export const { addMessageFromContact, addMessageFromUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

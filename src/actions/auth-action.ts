@@ -110,6 +110,7 @@ export async function register(formData: {
           profileUrl: photoUrl,
           biography: bio,
           theme: colorNames[grn(0, colorNames.length)],
+          lastSeen: Date.now().toString(),
         },
       });
     } else return 'Please provide valid credentials.';

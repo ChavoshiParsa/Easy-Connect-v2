@@ -7,6 +7,7 @@ import Icon from '../ui/Icon';
 import Link from 'next/link';
 import Avatar from '../ui/Avatar';
 import Loading from '../ui/Loading';
+import { formatTimeStatus } from './chat-screen/Message';
 
 export default function AllOtherUsers() {
   return (
@@ -80,11 +81,11 @@ function Modal() {
                         </h3>
                         {user.isOnline ? (
                           <span className='text-sm text-emerald-400'>
-                            Online
+                            online
                           </span>
                         ) : (
                           <span className='text-sm text-slate-400'>
-                            last seen recently
+                            {`last seen at ${formatTimeStatus(user.lastSeen)}`}
                           </span>
                         )}
                       </div>

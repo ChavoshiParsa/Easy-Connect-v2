@@ -39,7 +39,12 @@ export default function MessageContainer() {
       </div>
     );
 
-  if (!messages) return;
+  if (!messages)
+    return (
+      <span className='text-center text-lg'>
+        Send any message to start communication.
+      </span>
+    );
 
   return (
     <div className='z-10 mt-auto w-full overflow-y-scroll' ref={scrollRef}>

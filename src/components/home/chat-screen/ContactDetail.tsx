@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useParams, usePathname, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { useDispatch } from 'react-redux';
+import { formatTimeStatus } from './Message';
 
 export default function ContactDetail() {
   return (
@@ -69,12 +70,12 @@ function Modal() {
                 {user.firstName + ' ' + user.lastName}
               </span>
               {user.isOnline ? (
-                <span className='absolute bottom-3 left-5 z-20 text-sm text-emerald-300'>
-                  Online
+                <span className='absolute bottom-3 left-5 z-20 text-sm text-emerald-200'>
+                  online
                 </span>
               ) : (
                 <span className='absolute bottom-3 left-5 z-20 text-sm text-slate-300'>
-                  last seen recently
+                  {`last seen at ${formatTimeStatus(user.lastSeen)}`}
                 </span>
               )}
             </div>

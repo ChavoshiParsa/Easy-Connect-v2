@@ -1,6 +1,7 @@
 import ChatItem from './ChatItem';
 import Loading from '@/components/ui/Loading';
 import { useAppSelector } from '@/redux/store';
+import Link from 'next/link';
 
 export default function ChatList({}) {
   const chatSlice = useAppSelector((state) => state.contactsReducer);
@@ -11,6 +12,17 @@ export default function ChatList({}) {
         <Loading />
       </div>
     );
+
+  if (chatSlice.chats.length === 0) {
+    return (
+      <Link
+        className='mt-20 animate-bounce px-4 text-center text-base md:text-sm'
+        href='?all-users=true'
+      >
+        Ready to chat? Click here to start a conversation with anyone.
+      </Link>
+    );
+  }
 
   return (
     <div className='flex w-full flex-col items-center justify-start divide-y overflow-y-scroll bg-slate-50 dark:divide-zinc-700 dark:bg-zinc-900'>

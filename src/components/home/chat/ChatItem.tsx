@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Avatar from '../../ui/Avatar';
-import { formatTime } from '../chat-screen/Message';
+import { formatTimeMessage } from '../chat-screen/Message';
 import Icon from '@/components/ui/Icon';
 import { Theme } from '@prisma/client';
 
@@ -31,7 +31,7 @@ export default function ChatItem({
 }: ChatItemType) {
   return (
     <Link
-      className='flex w-full items-center justify-between space-x-4 px-1.5 py-3 hover:bg-purple-50 dark:hover:bg-zinc-950'
+      className='flex w-full items-center justify-between space-x-4 px-3 py-3 hover:bg-purple-50 dark:hover:bg-zinc-950'
       href={`/home/${id}`}
     >
       <Avatar
@@ -46,7 +46,7 @@ export default function ChatItem({
         <div className='flex w-full items-center justify-between'>
           <h3 className='font-bold'>{firstName + ' ' + lastName}</h3>
           <span className='text-xs text-zinc-400'>
-            {formatTime(new Date(lastMessage.time))}
+            {formatTimeMessage(new Date(lastMessage.time))}
           </span>
         </div>
         <div className='flex w-full justify-between'>

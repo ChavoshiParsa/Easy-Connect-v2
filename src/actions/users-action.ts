@@ -21,6 +21,7 @@ export async function getLoggedUser() {
         isOnline: true,
         unreadMessages: true,
         theme: true,
+        lastSeen: true,
       },
     });
   } catch (error) {
@@ -50,37 +51,10 @@ export async function getOtherUsers() {
         isOnline: true,
         unreadMessages: true,
         theme: true,
+        lastSeen: true,
       },
     });
   } catch (error) {
     console.error('Error fetching other users:', error);
-  }
-}
-
-export async function getSingleUser(id: string) {
-  let user = null;
-  try {
-    user = await prisma.user.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        id: true,
-        firstName: true,
-        lastName: true,
-        profileUrl: true,
-        biography: true,
-        username: true,
-        email: true,
-        isOnline: true,
-        unreadMessages: true,
-        theme: true,
-      },
-    });
-    return user;
-  } catch (error) {
-    console.error('Error fetching other users:', error);
-  } finally {
-    return user;
   }
 }

@@ -34,13 +34,17 @@ const usersSlice = createSlice({
       const index = state.usersCredentials.findIndex(
         (user) => user.id === action.payload
       );
+      if (index === -1) return;
       state.usersCredentials[index].isOnline = true;
+      state.usersCredentials[index].lastSeen = Date.now().toString();
     },
     setUserOff(state, action: PayloadAction<string>) {
       const index = state.usersCredentials.findIndex(
         (user) => user.id === action.payload
       );
+      if (index === -1) return;
       state.usersCredentials[index].isOnline = false;
+      state.usersCredentials[index].lastSeen = Date.now().toString();
     },
   },
   extraReducers: (builder) => {
@@ -64,11 +68,3 @@ const usersSlice = createSlice({
 export const { setUserOn, setUserOff } = usersSlice.actions;
 
 export default usersSlice.reducer;
-
-export const startAutoRefresh = () => (dispatch: any) => {
-  const fetchUsersData = () => {
-    dispatch(getInitialUsersData());
-    setTimeout(fetchUsersData, 2000);
-  };
-  fetchUsersData();
-};

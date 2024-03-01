@@ -6,18 +6,17 @@ import { useParams } from 'next/navigation';
 import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket';
+import { addMessageFromUser } from '@/redux/messages-slice';
 
 export default function InputField() {
   const dispatch = useDispatch<AppDispatch>();
 
   const senderId = useAppSelector((state) => state.authReducer.credentials.id);
-  const loading = useAppSelector((state) => state.authReducer.loading);
+  const contactList = useAppSelector((state) => state.contactsReducer.chats);
+
   const params = useParams<{ contact: string }>();
 
   const [message, setMessage] = useState('');
-
-  // error state
-  // loading state
 
   function inputChangeHandler(e: ChangeEvent<HTMLInputElement>) {
     socket.emit('activity', { senderId, receiverId: params.contact });
@@ -26,12 +25,16 @@ export default function InputField() {
 
   async function sendMessageHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (loading) return;
+    const index = contactList.findIndex(
+      (contact) => contact.id === params.contact
+    );
+    if (index === -1) return;
+
+    dispatch(addMessageFromUser({ contactId: params.contact, message }));
     try {
-      // loading state
       setMessage('');
+      socket.emit('message', { senderId, receiverId: params.contact, message });
       await sendMessage(params.contact, message);
-      // updating ui - message slice
     } catch (error: any) {
       dispatch(
         setNotification({

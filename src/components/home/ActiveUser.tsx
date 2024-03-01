@@ -1,20 +1,22 @@
 import Link from 'next/link';
 import Avatar from '../ui/Avatar';
-import { useState } from 'react';
-import { UsersState } from '@/redux/users-slice';
+import { useAppSelector } from '@/redux/store';
 
 export default function ActiveUser() {
-  const [onlineUsers, setOnlineUsers] = useState<
-    UsersState['usersCredentials']
-  >([]);
+  const users = useAppSelector((state) => state.usersReducer.usersCredentials);
+  const onlineUsers = users.filter((user) => user.isOnline === true);
 
-  if (onlineUsers.length !== 0)
-    return (
-      <div className='z-10 flex w-full flex-col items-center justify-center space-y-1 pb-3 pt-2 shadow'>
-        <div className='flex w-full items-center justify-between text-lg'>
-          <h3 className=''>Online now</h3>
-          <h3 className='text-purlue dark:text-purlue-dark'>All</h3>
-        </div>
+  return (
+    <div className='z-10 flex w-full flex-col items-center justify-center space-y-1 px-2.5 pb-3 pt-2 shadow'>
+      <div className='flex w-full items-center justify-between text-lg'>
+        <h3 className=''>Online now</h3>
+        <h3 className='text-purlue dark:text-purlue-dark'>All</h3>
+      </div>
+      {onlineUsers.length === 0 ? (
+        <span className='self-start py-4 text-sm text-rose-500'>
+          There is no online user at this moment.
+        </span>
+      ) : (
         <div className='w-full overflow-x-scroll'>
           <div className='flex items-center justify-start space-x-2'>
             {onlineUsers.map((user) => (
@@ -35,6 +37,7 @@ export default function ActiveUser() {
             ))}
           </div>
         </div>
-      </div>
-    );
+      )}
+    </div>
+  );
 }

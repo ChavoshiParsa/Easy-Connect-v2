@@ -1,24 +1,28 @@
 'use client';
 
-import { useDispatch } from 'react-redux';
+import { getInitialUsersData, setUserOff, setUserOn } from '../users-slice';
 import { AppDispatch, useAppSelector } from '../store';
-import { useEffect, useState } from 'react';
+import { getInitialAuthData } from '../auth-slice';
+import { setNotification } from '../ui-slice';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { socket } from '@/socket';
 import {
   getInitialContactsData,
   setContactUserOff,
   setContactUserOn,
 } from '../contacts-slice';
-import { setNotification } from '../ui-slice';
-import { getInitialAuthData } from '../auth-slice';
-import { getInitialUsersData, setUserOff, setUserOn } from '../users-slice';
-import { getInitialMessagesData } from '../messages-slice';
-import { socket } from '@/socket';
+import {
+  addMessageFromContact,
+  getInitialMessagesData,
+} from '../messages-slice';
 
 export const ContextCredential: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useAppSelector((state) => state.authReducer.credentials.id);
+  const contactList = useAppSelector((state) => state.contactsReducer.chats);
 
   useEffect(() => {
     if (userId !== '') socket.connect();
@@ -33,15 +37,26 @@ export const ContextCredential: React.FC<{
       dispatch(setUserOff(userId));
       dispatch(setContactUserOff(userId));
     }
+    function message({
+      senderId,
+      message,
+    }: {
+      senderId: string;
+      message: string;
+    }) {
+      dispatch(addMessageFromContact({ senderId, message }));
+    }
 
     socket.on('connect', onConnect);
     socket.on('online', online);
     socket.on('offline', offline);
+    socket.on('message', message);
 
     return () => {
       socket.off('connect', onConnect);
       socket.off('online', online);
       socket.off('offline', offline);
+      socket.off('message', message);
     };
   }, [dispatch, userId]);
 

@@ -20,15 +20,23 @@ export default function Message({ text, time, status }: MessageType) {
     >
       <span>{text}</span>
       <div className='flex items-center justify-end space-x-0.5 text-xs'>
-        <span>{formatTime(new Date(time))}</span>
+        <span>{formatTimeMessage(new Date(time))}</span>
         {status && <Icon name={status} size={22} color='#FFFFFF' />}
       </div>
     </div>
   );
 }
 
-export function formatTime(createdAt: Date): string {
+export function formatTimeMessage(createdAt: Date): string {
   return createdAt.toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+}
+
+export function formatTimeStatus(lastSeen: string): string {
+  const time = new Date(Number(lastSeen));
+  return time.toLocaleTimeString([], {
     hour: 'numeric',
     minute: '2-digit',
   });
