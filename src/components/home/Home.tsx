@@ -7,6 +7,7 @@ import ActiveUser from '@/components/home/ActiveUser';
 import ChatList from '@/components/home/chat/ChatList';
 import { useAppSelector } from '@/redux/store';
 import AllOtherUsers from './AllOtherUsers';
+import { Suspense } from 'react';
 
 export default function Home() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);

@@ -9,6 +9,14 @@ import Avatar from '../ui/Avatar';
 import Loading from '../ui/Loading';
 
 export default function AllOtherUsers() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Modal />
+    </Suspense>
+  );
+}
+
+function Modal() {
   const credentials = useAppSelector(
     (state) => state.usersReducer.usersCredentials
   );
@@ -22,7 +30,7 @@ export default function AllOtherUsers() {
   const modal = searchParams.get('all-users');
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       {modal && (
         <dialog
           className={`${isDark && 'dark'} z-40 flex h-full w-full items-center justify-center bg-black 
@@ -88,6 +96,6 @@ export default function AllOtherUsers() {
           </div>
         </dialog>
       )}
-    </Suspense>
+    </>
   );
 }

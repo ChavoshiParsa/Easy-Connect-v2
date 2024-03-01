@@ -3,8 +3,9 @@ import { sendMessage } from '@/actions/message-action';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { setNotification } from '@/redux/ui-slice';
 import { useParams } from 'next/navigation';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { socket } from '@/socket';
 
 export default function InputField() {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,6 +18,11 @@ export default function InputField() {
 
   // error state
   // loading state
+
+  function inputChangeHandler(e: ChangeEvent<HTMLInputElement>) {
+    socket.emit('activity', { senderId, receiverId: params.contact });
+    setMessage(e.target.value);
+  }
 
   async function sendMessageHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -46,7 +52,7 @@ export default function InputField() {
         placeholder='Write a message...'
         type='text'
         name='message-field'
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={inputChangeHandler}
         value={message}
         autoComplete='off'
         required

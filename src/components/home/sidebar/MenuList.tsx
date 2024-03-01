@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '@/redux/store';
 import { setIsMenuOpen, setNotification } from '@/redux/ui-slice';
 import { clearCredentials } from '@/redux/auth-slice';
+import { socket } from '@/socket';
 
 const SIZE = 20;
 
@@ -29,6 +30,7 @@ export default function MenuList() {
 
   async function logoutSubmitHandler(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    socket.disconnect();
     await logout();
     dispatch(
       setNotification({

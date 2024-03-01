@@ -2,16 +2,32 @@
 
 import { useDispatch } from 'react-redux';
 import { AppDispatch, useAppSelector } from '../store';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { getInitialContactsData } from '../contacts-slice';
 import { setNotification } from '../ui-slice';
 import { getInitialAuthData } from '../auth-slice';
 import { getInitialUsersData } from '../users-slice';
 import { getInitialMessagesData } from '../messages-slice';
+import { socket } from '@/socket';
 
 export const ContextCredential: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const userId = useAppSelector((state) => state.authReducer.credentials.id);
+
+  useEffect(() => {
+    if (userId !== '') socket.connect();
+    function onConnect() {
+      socket.emit('join', userId);
+    }
+
+    socket.on('connect', onConnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+    };
+  }, [userId]);
+
   const dispatch = useDispatch<AppDispatch>();
   const chatError = useAppSelector((state) => state.contactsReducer.error);
 

@@ -12,6 +12,14 @@ import { Suspense } from 'react';
 import { useDispatch } from 'react-redux';
 
 export default function ContactDetail() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Modal />
+    </Suspense>
+  );
+}
+
+function Modal() {
   const params = useParams<{ contact: string }>();
 
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
@@ -29,11 +37,11 @@ export default function ContactDetail() {
   const lfl = user.lastName.charAt(0).toUpperCase();
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       {modal && (
         <dialog
           className={`${isDark && 'dark'} z-40 flex h-full w-full items-center justify-center bg-black
-      bg-opacity-20 px-6 py-8 backdrop-blur-sm dark:bg-white dark:bg-opacity-20`}
+          bg-opacity-20 px-6 py-8 backdrop-blur-sm dark:bg-white dark:bg-opacity-20`}
         >
           <div className='flex size-full flex-col items-center justify-start overflow-hidden rounded-xl bg-slate-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-100'>
             <div
@@ -99,7 +107,7 @@ export default function ContactDetail() {
           </div>
         </dialog>
       )}
-    </Suspense>
+    </>
   );
 }
 

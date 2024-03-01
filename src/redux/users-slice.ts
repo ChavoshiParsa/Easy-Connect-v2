@@ -51,3 +51,11 @@ const usersSlice = createSlice({
 export const {} = usersSlice.actions;
 
 export default usersSlice.reducer;
+
+export const startAutoRefresh = () => (dispatch: any) => {
+  const fetchUsersData = () => {
+    dispatch(getInitialUsersData());
+    setTimeout(fetchUsersData, 2000);
+  };
+  fetchUsersData();
+};

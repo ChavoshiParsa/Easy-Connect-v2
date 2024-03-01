@@ -11,6 +11,7 @@ import Menu from '@/components/home/sidebar/Menu';
 import { useAppSelector } from '@/redux/store';
 import AllOtherUsers from '../AllOtherUsers';
 import ContactDetail from './ContactDetail';
+import { Suspense } from 'react';
 
 export default function ChatScreen() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);

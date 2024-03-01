@@ -23,6 +23,14 @@ export default function RegisterForm({
   email: string;
   password: string;
 }) {
+  return (
+    <Suspense fallback={<Loading />}>
+      <Modal email={email} password={password} />
+    </Suspense>
+  );
+}
+
+function Modal({ email, password }: { email: string; password: string }) {
   const dispatch = useDispatch<AppDispatch>();
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
@@ -103,7 +111,7 @@ export default function RegisterForm({
   }
 
   return (
-    <Suspense fallback={<Loading />}>
+    <>
       {modal && (
         <dialog
           className={`${isDark && 'dark'} z-40 flex h-full w-full items-center justify-center
@@ -233,6 +241,6 @@ export default function RegisterForm({
           </form>
         </dialog>
       )}
-    </Suspense>
+    </>
   );
 }
