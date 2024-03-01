@@ -1,8 +1,7 @@
 import Avatar from '@/components/ui/Avatar';
 import Icon from '@/components/ui/Icon';
 import Loading from '@/components/ui/Loading';
-import { AppDispatch, useAppSelector } from '@/redux/store';
-import { startAutoRefresh } from '@/redux/users-slice';
+import { useAppSelector } from '@/redux/store';
 import { socket } from '@/socket';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -10,7 +9,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 export default function Header() {
-  const dispatch = useDispatch<AppDispatch>();
+  // const dispatch = useDispatch<AppDispatch>();
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
   const params = useParams<{ contact: string }>();
   const router = useRouter();

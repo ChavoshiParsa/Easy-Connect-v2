@@ -1,10 +1,6 @@
 import ChatItem from './ChatItem';
-import { useEffect, useState } from 'react';
 import Loading from '@/components/ui/Loading';
-import { setNotification } from '@/redux/ui-slice';
-import { useDispatch } from 'react-redux';
-import { AppDispatch, useAppSelector } from '@/redux/store';
-import { getInitialContactsData } from '@/redux/contacts-slice';
+import { useAppSelector } from '@/redux/store';
 
 export default function ChatList({}) {
   const chatSlice = useAppSelector((state) => state.contactsReducer);
@@ -32,6 +28,7 @@ export default function ChatList({}) {
             status: chat.lastMessage.status,
           }}
           theme={chat.theme}
+          isOnline={chat.isOnline}
         />
       ))}
     </div>

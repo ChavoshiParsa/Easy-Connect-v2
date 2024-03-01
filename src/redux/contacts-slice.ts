@@ -28,7 +28,18 @@ const initialState: chatData = {
 const authSlice = createSlice({
   name: 'contacts',
   initialState,
-  reducers: {},
+  reducers: {
+    setContactUserOn(state, action: PayloadAction<string>) {
+      const index = state.chats.findIndex((user) => user.id === action.payload);
+      if (index === -1) return;
+      state.chats[index].isOnline = true;
+    },
+    setContactUserOff(state, action: PayloadAction<string>) {
+      const index = state.chats.findIndex((user) => user.id === action.payload);
+      if (index === -1) return;
+      state.chats[index].isOnline = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getInitialContactsData.pending, (state) => {
@@ -49,6 +60,6 @@ const authSlice = createSlice({
   },
 });
 
-export const {} = authSlice.actions;
+export const { setContactUserOn, setContactUserOff } = authSlice.actions;
 
 export default authSlice.reducer;

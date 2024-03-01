@@ -96,6 +96,7 @@ export async function getChats() {
             lastName: true,
             profileUrl: true,
             theme: true,
+            isOnline: true,
           },
         });
 
@@ -116,6 +117,7 @@ export async function getChats() {
                 text: mergedMessages[0].text ?? '',
                 time: mergedMessages[0].time ?? '',
               },
+          isOnline: contact?.isOnline || false,
         };
       })
     );

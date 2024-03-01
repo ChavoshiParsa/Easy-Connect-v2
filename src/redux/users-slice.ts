@@ -29,7 +29,20 @@ const initialState: UsersState = {
 const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {},
+  reducers: {
+    setUserOn(state, action: PayloadAction<string>) {
+      const index = state.usersCredentials.findIndex(
+        (user) => user.id === action.payload
+      );
+      state.usersCredentials[index].isOnline = true;
+    },
+    setUserOff(state, action: PayloadAction<string>) {
+      const index = state.usersCredentials.findIndex(
+        (user) => user.id === action.payload
+      );
+      state.usersCredentials[index].isOnline = false;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getInitialUsersData.pending, (state) => {
@@ -48,7 +61,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const {} = usersSlice.actions;
+export const { setUserOn, setUserOff } = usersSlice.actions;
 
 export default usersSlice.reducer;
 

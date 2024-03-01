@@ -16,6 +16,7 @@ export type ChatItemType = {
   };
   newMassages: number;
   theme: Theme;
+  isOnline: boolean;
 };
 
 export default function ChatItem({
@@ -26,6 +27,7 @@ export default function ChatItem({
   lastMessage,
   newMassages,
   theme,
+  isOnline,
 }: ChatItemType) {
   return (
     <Link
@@ -38,6 +40,7 @@ export default function ChatItem({
         src={src}
         theme={theme}
         size={52}
+        online={isOnline}
       />
       <div className='flex w-full flex-col items-center justify-center space-y-1'>
         <div className='flex w-full items-center justify-between'>
