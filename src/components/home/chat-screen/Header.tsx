@@ -20,15 +20,17 @@ export default function Header() {
   useEffect(() => {
     let activityTimer: NodeJS.Timeout;
 
-    socket.on('activity', (senderId) => {
+    function activity(senderId: string) {
       if (senderId === params.contact) setIsTyping(true);
       activityTimer = setTimeout(() => {
         setIsTyping(false);
-      }, 2000);
-    });
+      }, 1000);
+    }
+
+    socket.on('activity', activity);
 
     return () => {
-      socket.off('activity');
+      socket.off('activity', activity);
       clearTimeout(activityTimer);
     };
   }, [params.contact]);

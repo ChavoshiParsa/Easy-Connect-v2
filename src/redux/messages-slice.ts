@@ -21,13 +21,14 @@ export const getInitialMessagesData = createAsyncThunk(
 
 export type UsersState = {
   messagesContact: { contactId: string; messages: MessageType[] }[];
+
   loading: boolean;
   error: string | null;
 };
 
 const initialState: UsersState = {
   messagesContact: [],
-  loading: true,
+  loading: false,
   error: null,
 };
 
@@ -70,6 +71,17 @@ const usersSlice = createSlice({
         status: 'sent',
       });
     },
+    getInitMessages(
+      state,
+      action: PayloadAction<
+        {
+          contactId: string;
+          messages: MessageType[];
+        }[]
+      >
+    ) {
+      state.messagesContact = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -89,6 +101,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const { addMessageFromContact, addMessageFromUser } = usersSlice.actions;
+export const { addMessageFromContact, addMessageFromUser, getInitMessages } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;

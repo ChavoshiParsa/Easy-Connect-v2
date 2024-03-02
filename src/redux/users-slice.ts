@@ -22,7 +22,7 @@ export type UsersState = {
 
 const initialState: UsersState = {
   usersCredentials: [],
-  loading: true,
+  loading: false,
   error: null,
 };
 

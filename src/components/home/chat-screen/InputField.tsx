@@ -7,12 +7,16 @@ import { ChangeEvent, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { socket } from '@/socket';
 import { addMessageFromUser } from '@/redux/messages-slice';
+import { addContact, updateLastMessage } from '@/redux/contacts-slice';
 
 export default function InputField() {
   const dispatch = useDispatch<AppDispatch>();
 
   const senderId = useAppSelector((state) => state.authReducer.credentials.id);
   const contactList = useAppSelector((state) => state.contactsReducer.chats);
+  const userList = useAppSelector(
+    (state) => state.usersReducer.usersCredentials
+  );
 
   const params = useParams<{ contact: string }>();
 
@@ -25,15 +29,46 @@ export default function InputField() {
 
   async function sendMessageHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    socket.emit('message', { senderId, receiverId: params.contact, message });
+
     const index = contactList.findIndex(
       (contact) => contact.id === params.contact
     );
-    if (index === -1) return;
+    if (index === -1) {
+      const contact = userList.find((user) => user.id === params.contact);
+      if (contact)
+        dispatch(
+          addContact({
+            id: params.contact,
+            firstName: contact.firstName,
+            lastName: contact.lastName,
+            isOnline: contact.isOnline,
+            newMassages: 0,
+            src: contact.profileUrl,
+            theme: contact.theme,
+            lastMessage: {
+              text: message,
+              time: new Date().toString(),
+              status: 'sent',
+            },
+          })
+        );
+    } else {
+      dispatch(
+        updateLastMessage({
+          id: params.contact,
+          lastMessage: {
+            text: message,
+            time: new Date().toString(),
+            status: 'sent',
+          },
+        })
+      );
+      dispatch(addMessageFromUser({ contactId: params.contact, message }));
+    }
 
-    dispatch(addMessageFromUser({ contactId: params.contact, message }));
     try {
       setMessage('');
-      socket.emit('message', { senderId, receiverId: params.contact, message });
       await sendMessage(params.contact, message);
     } catch (error: any) {
       dispatch(

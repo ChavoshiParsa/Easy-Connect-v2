@@ -45,7 +45,7 @@ const initialState: AuthState = {
     theme: 'red',
     lastSeen: Date.now().toString(),
   },
-  loading: true,
+  loading: false,
   error: null,
 };
 

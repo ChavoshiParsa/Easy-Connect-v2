@@ -8,9 +8,11 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { socket } from '@/socket';
 import {
+  addContact,
   getInitialContactsData,
   setContactUserOff,
   setContactUserOn,
+  updateLastMessage,
 } from '../contacts-slice';
 import {
   addMessageFromContact,
@@ -22,13 +24,25 @@ export const ContextCredential: React.FC<{
 }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
   const userId = useAppSelector((state) => state.authReducer.credentials.id);
-  const contactList = useAppSelector((state) => state.contactsReducer.chats);
+  const contacts = useAppSelector((state) => state.contactsReducer.chats);
+  const userList = useAppSelector(
+    (state) => state.usersReducer.usersCredentials
+  );
 
   useEffect(() => {
     if (userId !== '') socket.connect();
     function onConnect() {
       socket.emit('join', userId);
     }
+
+    socket.on('connect', onConnect);
+
+    return () => {
+      socket.off('connect', onConnect);
+    };
+  }, [dispatch, userId]);
+
+  useEffect(() => {
     function online(userId: string) {
       dispatch(setUserOn(userId));
       dispatch(setContactUserOn(userId));
@@ -37,6 +51,17 @@ export const ContextCredential: React.FC<{
       dispatch(setUserOff(userId));
       dispatch(setContactUserOff(userId));
     }
+
+    socket.on('online', online);
+    socket.on('offline', offline);
+
+    return () => {
+      socket.off('online', online);
+      socket.off('offline', offline);
+    };
+  }, [dispatch, userId]);
+
+  useEffect(() => {
     function message({
       senderId,
       message,
@@ -44,21 +69,45 @@ export const ContextCredential: React.FC<{
       senderId: string;
       message: string;
     }) {
+      const index = contacts.findIndex((contact) => contact.id === senderId);
+      if (index === -1) {
+        const contact = userList.find((user) => user.id === senderId);
+        if (contact)
+          dispatch(
+            addContact({
+              id: senderId,
+              firstName: contact.firstName,
+              lastName: contact.lastName,
+              isOnline: contact.isOnline,
+              newMassages: 1,
+              src: contact.profileUrl,
+              theme: contact.theme,
+              lastMessage: {
+                text: message,
+                time: new Date().toString(),
+              },
+            })
+          );
+      } else {
+        dispatch(
+          updateLastMessage({
+            id: senderId,
+            lastMessage: {
+              text: message,
+              time: new Date().toString(),
+            },
+          })
+        );
+      }
       dispatch(addMessageFromContact({ senderId, message }));
     }
 
-    socket.on('connect', onConnect);
-    socket.on('online', online);
-    socket.on('offline', offline);
     socket.on('message', message);
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('online', online);
-      socket.off('offline', offline);
       socket.off('message', message);
     };
-  }, [dispatch, userId]);
+  }, [contacts, dispatch, userList]);
 
   const chatError = useAppSelector((state) => state.contactsReducer.error);
 
@@ -84,15 +133,17 @@ export const ContextCredential: React.FC<{
       dispatch(setNotification({ status: 'Error', message: usersError }));
   }, [usersError, dispatch]);
 
+  // const dispatch = useDispatch<AppDispatch>();
+  const id = useAppSelector((state) => state.authReducer.credentials.id);
+  // const contacts = useAppSelector((state) => state.contactsReducer.chats);
   const messagesError = useAppSelector((state) => state.messagesReducer.error);
-  const contacts = useAppSelector((state) => state.contactsReducer.chats);
   const contactIds = contacts.map((contact) => contact.id);
 
   useEffect(() => {
     dispatch(getInitialMessagesData(contactIds));
     if (messagesError)
       dispatch(setNotification({ status: 'Error', message: messagesError }));
-  }, [messagesError, dispatch, contactIds]);
+  }, [dispatch, messagesError, id]);
 
   return <>{children}</>;
 };

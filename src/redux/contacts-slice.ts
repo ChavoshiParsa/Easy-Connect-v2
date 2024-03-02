@@ -19,9 +19,18 @@ export type chatData = {
   error: string | null;
 };
 
+type lastMessage = {
+  id: string;
+  lastMessage: {
+    text: string;
+    time: string;
+    status?: 'sent' | 'seen' | 'pending';
+  };
+};
+
 const initialState: chatData = {
   chats: [],
-  loading: true,
+  loading: false,
   error: null,
 };
 
@@ -38,6 +47,15 @@ const authSlice = createSlice({
       const index = state.chats.findIndex((user) => user.id === action.payload);
       if (index === -1) return;
       state.chats[index].isOnline = false;
+    },
+    addContact(state, action: PayloadAction<ChatItemType>) {
+      state.chats.push(action.payload);
+    },
+    updateLastMessage(state, action: PayloadAction<lastMessage>) {
+      const index = state.chats.findIndex(
+        (user) => user.id == action.payload.id
+      );
+      state.chats[index].lastMessage = action.payload.lastMessage;
     },
   },
   extraReducers: (builder) => {
@@ -60,6 +78,11 @@ const authSlice = createSlice({
   },
 });
 
-export const { setContactUserOn, setContactUserOff } = authSlice.actions;
+export const {
+  setContactUserOn,
+  setContactUserOff,
+  addContact,
+  updateLastMessage,
+} = authSlice.actions;
 
 export default authSlice.reducer;
