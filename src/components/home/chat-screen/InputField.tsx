@@ -43,7 +43,7 @@ export default function InputField() {
             firstName: contact.firstName,
             lastName: contact.lastName,
             isOnline: contact.isOnline,
-            newMassages: 0,
+            newMessages: 0,
             src: contact.profileUrl,
             theme: contact.theme,
             lastMessage: {
@@ -64,8 +64,8 @@ export default function InputField() {
           },
         })
       );
-      dispatch(addMessageFromUser({ contactId: params.contact, message }));
     }
+    dispatch(addMessageFromUser({ contactId: params.contact, message }));
 
     try {
       setMessage('');
@@ -86,7 +86,7 @@ export default function InputField() {
       onSubmit={sendMessageHandler}
     >
       <input
-        className='w-full rounded-lg bg-slate-50 px-5 py-3 outline-none dark:bg-zinc-700'
+        className='w-full rounded-lg bg-slate-200 px-5 py-3 outline-none dark:bg-zinc-700'
         placeholder='Write a message...'
         type='text'
         name='message-field'

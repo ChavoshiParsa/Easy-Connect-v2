@@ -46,12 +46,24 @@ const usersSlice = createSlice({
       const index = state.messagesContact.findIndex(
         (chat) => chat.contactId === action.payload.senderId
       );
-      if (index === -1) return;
-      state.messagesContact[index].messages.push({
-        id: `${action.payload.message}-${new Date()}`,
-        text: action.payload.message,
-        time: new Date().toISOString(),
-      });
+      if (index === -1) {
+        state.messagesContact.push({
+          contactId: action.payload.senderId,
+          messages: [
+            {
+              id: `${action.payload.message}-${Date.now()}`,
+              text: action.payload.message,
+              time: new Date().toISOString(),
+            },
+          ],
+        });
+      } else {
+        state.messagesContact[index].messages.push({
+          id: `${action.payload.message}-${new Date()}`,
+          text: action.payload.message,
+          time: new Date().toISOString(),
+        });
+      }
     },
     addMessageFromUser(
       state,
@@ -63,24 +75,29 @@ const usersSlice = createSlice({
       const index = state.messagesContact.findIndex(
         (chat) => chat.contactId === action.payload.contactId
       );
-      if (index === -1) return;
-      state.messagesContact[index].messages.push({
-        id: `${action.payload.message}-${Date.now()}`,
-        text: action.payload.message,
-        time: new Date().toISOString(),
-        status: 'sent',
-      });
+      if (index === -1) {
+        state.messagesContact.push({
+          contactId: action.payload.contactId,
+          messages: [
+            {
+              id: `${action.payload.message}-${Date.now()}`,
+              text: action.payload.message,
+              time: new Date().toISOString(),
+              status: 'sent',
+            },
+          ],
+        });
+      } else {
+        state.messagesContact[index].messages.push({
+          id: `${action.payload.message}-${Date.now()}`,
+          text: action.payload.message,
+          time: new Date().toISOString(),
+          status: 'sent',
+        });
+      }
     },
-    getInitMessages(
-      state,
-      action: PayloadAction<
-        {
-          contactId: string;
-          messages: MessageType[];
-        }[]
-      >
-    ) {
-      state.messagesContact = action.payload;
+    seenMessages() {
+      // socket needed
     },
   },
   extraReducers: (builder) => {
@@ -101,7 +118,6 @@ const usersSlice = createSlice({
   },
 });
 
-export const { addMessageFromContact, addMessageFromUser, getInitMessages } =
-  usersSlice.actions;
+export const { addMessageFromContact, addMessageFromUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

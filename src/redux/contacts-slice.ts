@@ -26,6 +26,7 @@ type lastMessage = {
     time: string;
     status?: 'sent' | 'seen' | 'pending';
   };
+  newMessages?: boolean;
 };
 
 const initialState: chatData = {
@@ -56,6 +57,16 @@ const authSlice = createSlice({
         (user) => user.id == action.payload.id
       );
       state.chats[index].lastMessage = action.payload.lastMessage;
+      if (action.payload.newMessages) state.chats[index].newMessages++;
+    },
+    readUnreadMessages(state, action: PayloadAction<string>) {
+      const index = state.chats.findIndex((chat) => chat.id === action.payload);
+      if (index === -1) return;
+      state.chats[index].newMessages = 0;
+    },
+    incrementNewMessagesContact(state, action: PayloadAction<string>) {
+      const index = state.chats.findIndex((chat) => chat.id === action.payload);
+      state.chats[index].newMessages++;
     },
   },
   extraReducers: (builder) => {
@@ -83,6 +94,8 @@ export const {
   setContactUserOff,
   addContact,
   updateLastMessage,
+  readUnreadMessages,
+  incrementNewMessagesContact,
 } = authSlice.actions;
 
 export default authSlice.reducer;

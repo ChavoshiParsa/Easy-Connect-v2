@@ -36,7 +36,7 @@ export default function Header() {
   }, [params.contact]);
 
   return (
-    <div className='z-20 flex w-full flex-row items-center justify-between bg-slate-50 py-2 shadow-lg dark:bg-zinc-900'>
+    <div className='z-20 flex w-full flex-row items-center justify-between bg-slate-100 py-2 shadow-lg dark:bg-neutral-900'>
       <Link className='mr-4 rounded-full ' href='/home'>
         <Icon name='back' size={28} dark={isDark} />
       </Link>

@@ -4,6 +4,7 @@ import { ChatItemType } from '@/components/home/chat/ChatItem';
 import { prisma } from '../../prisma/prisma';
 import { MessageType } from '@/components/home/chat-screen/Message';
 import { auth } from '@/auth';
+import { date } from 'zod';
 
 export async function getChats() {
   const session = await auth();
@@ -105,7 +106,7 @@ export async function getChats() {
           firstName: contact?.firstName || '',
           lastName: contact?.lastName || '',
           src: contact?.profileUrl || '',
-          newMassages: chat.newMessages ?? 0,
+          newMessages: chat.newMessages ?? 0,
           theme: contact?.theme || 'red',
           lastMessage: mergedMessages[0].status
             ? {
@@ -124,4 +125,39 @@ export async function getChats() {
 
     return mappedChats;
   }
+}
+
+export async function openNewMessages(contactId: string) {
+  const session = await auth();
+  if (!session?.user?.email) return;
+
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { chats: true, unreadMessages: true },
+  });
+
+  if (!user) return;
+
+  const chat = user.chats.find((contact) => contact.receiverId === contactId);
+  if (!chat) return;
+  const { id, newMessages } = chat;
+
+  await prisma.user.update({
+    where: { email: session.user.email },
+    data: {
+      chats: {
+        update: {
+          where: { id },
+          data: {
+            newMessages: 0,
+          },
+        },
+      },
+    },
+  });
+
+  await prisma.user.update({
+    where: { email: session.user.email },
+    data: { unreadMessages: user.unreadMessages - newMessages },
+  });
 }

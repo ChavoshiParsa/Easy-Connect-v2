@@ -2,7 +2,7 @@
 
 import { getInitialUsersData, setUserOff, setUserOn } from '../users-slice';
 import { AppDispatch, useAppSelector } from '../store';
-import { getInitialAuthData } from '../auth-slice';
+import { getInitialAuthData, incrementNewMessages } from '../auth-slice';
 import { setNotification } from '../ui-slice';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
@@ -10,6 +10,7 @@ import { socket } from '@/socket';
 import {
   addContact,
   getInitialContactsData,
+  incrementNewMessagesContact,
   setContactUserOff,
   setContactUserOn,
   updateLastMessage,
@@ -18,11 +19,13 @@ import {
   addMessageFromContact,
   getInitialMessagesData,
 } from '../messages-slice';
+import { useParams } from 'next/navigation';
 
 export const ContextCredential: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const dispatch = useDispatch<AppDispatch>();
+  const params = useParams<{ contact: string }>();
   const userId = useAppSelector((state) => state.authReducer.credentials.id);
   const contacts = useAppSelector((state) => state.contactsReducer.chats);
   const userList = useAppSelector(
@@ -79,7 +82,7 @@ export const ContextCredential: React.FC<{
               firstName: contact.firstName,
               lastName: contact.lastName,
               isOnline: contact.isOnline,
-              newMassages: 1,
+              newMessages: 0,
               src: contact.profileUrl,
               theme: contact.theme,
               lastMessage: {
@@ -99,6 +102,10 @@ export const ContextCredential: React.FC<{
           })
         );
       }
+      if (params.contact !== senderId) {
+        dispatch(incrementNewMessages());
+        dispatch(incrementNewMessagesContact(senderId));
+      }
       dispatch(addMessageFromContact({ senderId, message }));
     }
 
@@ -107,7 +114,7 @@ export const ContextCredential: React.FC<{
     return () => {
       socket.off('message', message);
     };
-  }, [contacts, dispatch, userList]);
+  }, [contacts, dispatch, params.contact, userList]);
 
   const chatError = useAppSelector((state) => state.contactsReducer.error);
 
@@ -133,9 +140,7 @@ export const ContextCredential: React.FC<{
       dispatch(setNotification({ status: 'Error', message: usersError }));
   }, [usersError, dispatch]);
 
-  // const dispatch = useDispatch<AppDispatch>();
   const id = useAppSelector((state) => state.authReducer.credentials.id);
-  // const contacts = useAppSelector((state) => state.contactsReducer.chats);
   const messagesError = useAppSelector((state) => state.messagesReducer.error);
   const contactIds = contacts.map((contact) => contact.id);
 
@@ -143,6 +148,7 @@ export const ContextCredential: React.FC<{
     dispatch(getInitialMessagesData(contactIds));
     if (messagesError)
       dispatch(setNotification({ status: 'Error', message: messagesError }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, messagesError, id]);
 
   return <>{children}</>;

@@ -8,30 +8,15 @@ import InputField from '@/components/home/chat-screen/InputField';
 import MessageContainer from '@/components/home/chat-screen/MessageContainer';
 import ChatList from '@/components/home/chat/ChatList';
 import Menu from '@/components/home/sidebar/Menu';
-import { AppDispatch, useAppSelector } from '@/redux/store';
+import { useAppSelector } from '@/redux/store';
 import AllOtherUsers from '../AllOtherUsers';
 import ContactDetail from './ContactDetail';
-import { useEffect } from 'react';
-import { getInitialMessagesData } from '@/redux/messages-slice';
-import { setNotification } from '@/redux/ui-slice';
-import { useDispatch } from 'react-redux';
 
 export default function ChatScreen() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
-  // const dispatch = useDispatch<AppDispatch>();
-  // const id = useAppSelector((state) => state.authReducer.credentials.id);
-  // const contacts = useAppSelector((state) => state.contactsReducer.chats);
-  // const messagesError = useAppSelector((state) => state.messagesReducer.error);
-  // const contactIds = contacts.map((contact) => contact.id);
-
-  // useEffect(() => {
-  //   dispatch(getInitialMessagesData(contactIds));
-  //   if (messagesError)
-  //     dispatch(setNotification({ status: 'Error', message: messagesError }));
-  // }, [dispatch, messagesError, id]);
 
   return (
-    <main className='flex h-full w-full flex-row items-center justify-start bg-slate-100 dark:bg-zinc-800'>
+    <main className='flex h-full w-full flex-row items-center justify-start bg-slate-50 dark:bg-zinc-900'>
       {isMenuOpen && <Menu />}
       <div className='hidden lg:block lg:h-full lg:w-3/12 lg:border-r dark:lg:border-r-zinc-950 xl:w-1/5'>
         <Menu />

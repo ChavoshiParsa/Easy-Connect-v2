@@ -1,8 +1,12 @@
-import Link from 'next/link';
 import Avatar from '../../ui/Avatar';
 import { formatTimeMessage } from '../chat-screen/Message';
 import Icon from '@/components/ui/Icon';
 import { Theme } from '@prisma/client';
+import { AppDispatch, useAppSelector } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import { readSomeUnreadMessages } from '@/redux/auth-slice';
+import { readUnreadMessages } from '@/redux/contacts-slice';
+import { useRouter } from 'next/navigation';
 
 export type ChatItemType = {
   id: string;
@@ -14,7 +18,7 @@ export type ChatItemType = {
     time: string;
     status?: 'sent' | 'seen' | 'pending';
   };
-  newMassages: number;
+  newMessages: number;
   theme: Theme;
   isOnline: boolean;
 };
@@ -25,14 +29,28 @@ export default function ChatItem({
   lastName,
   src,
   lastMessage,
-  newMassages,
+  newMessages,
   theme,
   isOnline,
 }: ChatItemType) {
+  const dispatch = useDispatch<AppDispatch>();
+  const chats = useAppSelector((state) => state.contactsReducer.chats);
+  const chatNewMessages = chats.find((chat) => chat.id === id)?.newMessages;
+
+  const router = useRouter();
+
+  function goToChatHandler() {
+    router.push('/home/' + id);
+    if (chatNewMessages) {
+      dispatch(readSomeUnreadMessages(chatNewMessages));
+      dispatch(readUnreadMessages(id));
+    }
+  }
+
   return (
-    <Link
+    <div
       className='flex w-full items-center justify-between space-x-4 px-3 py-3 hover:bg-purple-50 dark:hover:bg-zinc-950'
-      href={`/home/${id}`}
+      onClick={goToChatHandler}
     >
       <Avatar
         firstName={firstName}
@@ -54,12 +72,16 @@ export default function ChatItem({
           {lastMessage.status ? (
             <Icon name={lastMessage.status} size={22} color='#FFFFFF' />
           ) : (
-            <span className='flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs text-white dark:bg-blue-400'>
-              {newMassages}
-            </span>
+            <>
+              {newMessages !== 0 && (
+                <span className='flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-xs text-white dark:bg-blue-400'>
+                  {newMessages}
+                </span>
+              )}
+            </>
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

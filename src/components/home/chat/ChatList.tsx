@@ -33,7 +33,7 @@ export default function ChatList({}) {
           firstName={chat.firstName}
           lastName={chat.lastName}
           src={chat.src}
-          newMassages={chat.newMassages}
+          newMessages={chat.newMessages}
           lastMessage={{
             text: chat.lastMessage.text,
             time: chat.lastMessage.time,

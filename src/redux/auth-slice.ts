@@ -68,6 +68,12 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    readSomeUnreadMessages(state, action: PayloadAction<number>) {
+      state.credentials.unreadMessages -= action.payload;
+    },
+    incrementNewMessages(state) {
+      state.credentials.unreadMessages++;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -89,6 +95,10 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearCredentials } = authSlice.actions;
+export const {
+  clearCredentials,
+  readSomeUnreadMessages,
+  incrementNewMessages,
+} = authSlice.actions;
 
 export default authSlice.reducer;
