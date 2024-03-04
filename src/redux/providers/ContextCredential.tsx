@@ -120,6 +120,19 @@ export const ContextCredential: React.FC<{
       if (params.contact !== senderId) {
         dispatch(incrementNewMessages());
         dispatch(incrementNewMessagesContact(senderId));
+        userList.find((user) => user.id === senderId)?.firstName;
+        Notification.requestPermission().then((perm) => {
+          if (perm === 'default') alert(perm);
+          if (perm === 'granted') {
+            const user = userList.find((user) => user.id === senderId);
+            new Notification(
+              'you have new message from ' +
+                user?.firstName +
+                ' ' +
+                user?.lastName
+            );
+          }
+        });
       }
       dispatch(addMessageFromContact({ senderId, message }));
     }
