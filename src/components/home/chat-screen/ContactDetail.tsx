@@ -75,7 +75,7 @@ function Modal() {
                 </span>
               ) : (
                 <span className='absolute bottom-3 left-5 z-20 text-sm text-slate-300'>
-                  {`last seen at ${formatTimeStatus(user.lastSeen)}`}
+                  {formatTimeStatus(user.lastSeen)}
                 </span>
               )}
             </div>

@@ -65,7 +65,7 @@ export default function Header() {
               <span className='text-sm text-emerald-400'>online</span>
             ) : (
               <span className='text-sm text-slate-400'>
-                {`last seen at ${formatTimeStatus(user.lastSeen)}`}
+                {formatTimeStatus(user.lastSeen)}
               </span>
             )}
           </div>
