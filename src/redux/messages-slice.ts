@@ -96,8 +96,17 @@ const usersSlice = createSlice({
         });
       }
     },
-    seenMessages() {
-      // socket needed
+    seenMessages(state, action: PayloadAction<string>) {
+      const index = state.messagesContact.findIndex(
+        (chat) => chat.contactId === action.payload
+      );
+      if (index === -1) return;
+
+      state.messagesContact[index].messages.forEach((message) => {
+        if (message.status && message.status === 'sent') {
+          message.status = 'seen';
+        }
+      });
     },
   },
   extraReducers: (builder) => {
@@ -118,6 +127,7 @@ const usersSlice = createSlice({
   },
 });
 
-export const { addMessageFromContact, addMessageFromUser } = usersSlice.actions;
+export const { addMessageFromContact, addMessageFromUser, seenMessages } =
+  usersSlice.actions;
 
 export default usersSlice.reducer;

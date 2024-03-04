@@ -68,6 +68,13 @@ const authSlice = createSlice({
       const index = state.chats.findIndex((chat) => chat.id === action.payload);
       state.chats[index].newMessages++;
     },
+    seenMessagesContact(state, action: PayloadAction<string>) {
+      const index = state.chats.findIndex((chat) => chat.id === action.payload);
+      if (index === -1) return;
+      if (state.chats[index].lastMessage.status !== undefined) {
+        state.chats[index].lastMessage.status = 'seen';
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -96,6 +103,7 @@ export const {
   updateLastMessage,
   readUnreadMessages,
   incrementNewMessagesContact,
+  seenMessagesContact,
 } = authSlice.actions;
 
 export default authSlice.reducer;

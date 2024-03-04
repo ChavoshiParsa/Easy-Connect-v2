@@ -4,7 +4,7 @@ import { ChatItemType } from '@/components/home/chat/ChatItem';
 import { prisma } from '../../prisma/prisma';
 import { MessageType } from '@/components/home/chat-screen/Message';
 import { auth } from '@/auth';
-import { date } from 'zod';
+import { date, string } from 'zod';
 
 export async function getChats() {
   const session = await auth();
@@ -159,5 +159,39 @@ export async function openNewMessages(contactId: string) {
   await prisma.user.update({
     where: { email: session.user.email },
     data: { unreadMessages: user.unreadMessages - newMessages },
+  });
+}
+
+export async function seenMessagesAction(contactId: string) {
+  const session = await auth();
+  if (!session?.user?.email) return;
+
+  const user = await prisma.user.findUnique({
+    where: { email: session.user.email },
+    select: { id: true },
+  });
+
+  if (!user) return;
+
+  const userChat = await prisma.chat.findFirst({
+    where: {
+      AND: [{ senderId: contactId }, { receiverId: user.id }],
+    },
+    select: { messages: true },
+  });
+
+  if (!userChat) return;
+
+  const messagesIds = userChat.messages.map((message) => message.id);
+
+  await prisma.message.updateMany({
+    where: {
+      id: {
+        in: messagesIds,
+      },
+    },
+    data: {
+      status: 'seen',
+    },
   });
 }

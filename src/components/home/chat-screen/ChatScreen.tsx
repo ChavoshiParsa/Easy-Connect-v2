@@ -8,12 +8,29 @@ import InputField from '@/components/home/chat-screen/InputField';
 import MessageContainer from '@/components/home/chat-screen/MessageContainer';
 import ChatList from '@/components/home/chat/ChatList';
 import Menu from '@/components/home/sidebar/Menu';
-import { useAppSelector } from '@/redux/store';
 import AllOtherUsers from '../AllOtherUsers';
 import ContactDetail from './ContactDetail';
+import { openNewMessages, seenMessagesAction } from '@/actions/contact-action';
+import { useAppSelector } from '@/redux/store';
+import { useParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { socket } from '@/socket';
 
 export default function ChatScreen() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
+  const messages = useAppSelector(
+    (state) => state.messagesReducer.messagesContact
+  );
+  const params = useParams<{ contact: string }>();
+
+  useEffect(() => {
+    async function seenMessageHandler() {
+      await openNewMessages(params.contact);
+      await seenMessagesAction(params.contact);
+    }
+    seenMessageHandler();
+    socket.emit('seenMessage', params.contact);
+  }, [params.contact, messages]);
 
   return (
     <main className='flex h-full w-full flex-row items-center justify-start bg-slate-50 dark:bg-zinc-900'>

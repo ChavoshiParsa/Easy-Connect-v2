@@ -11,6 +11,7 @@ import {
   addContact,
   getInitialContactsData,
   incrementNewMessagesContact,
+  seenMessagesContact,
   setContactUserOff,
   setContactUserOn,
   updateLastMessage,
@@ -18,6 +19,7 @@ import {
 import {
   addMessageFromContact,
   getInitialMessagesData,
+  seenMessages,
 } from '../messages-slice';
 import { useParams } from 'next/navigation';
 
@@ -31,6 +33,19 @@ export const ContextCredential: React.FC<{
   const userList = useAppSelector(
     (state) => state.usersReducer.usersCredentials
   );
+
+  useEffect(() => {
+    function seenMessage(viewerId: string) {
+      dispatch(seenMessages(viewerId));
+      dispatch(seenMessagesContact(viewerId));
+    }
+
+    socket.on('seenMessage', seenMessage);
+
+    return () => {
+      socket.off('seenMessage', seenMessage);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     if (userId !== '') socket.connect();

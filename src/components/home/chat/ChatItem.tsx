@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { readSomeUnreadMessages } from '@/redux/auth-slice';
 import { readUnreadMessages } from '@/redux/contacts-slice';
 import { useRouter } from 'next/navigation';
+import { socket } from '@/socket';
 
 export type ChatItemType = {
   id: string;
@@ -41,6 +42,7 @@ export default function ChatItem({
 
   function goToChatHandler() {
     router.push('/home/' + id);
+    socket.emit('seenMessage', id);
     if (chatNewMessages) {
       dispatch(readSomeUnreadMessages(chatNewMessages));
       dispatch(readUnreadMessages(id));
