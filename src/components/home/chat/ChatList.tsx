@@ -1,10 +1,22 @@
-import ChatItem from './ChatItem';
+import ChatItem, { ChatItemType } from './ChatItem';
 import Loading from '@/components/ui/Loading';
 import { useAppSelector } from '@/redux/store';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function ChatList({}) {
   const chatSlice = useAppSelector((state) => state.contactsReducer);
+  const [sortedChats, setSortedChats] = useState<ChatItemType[]>([]);
+
+  useEffect(() => {
+    const sortedChatsCopy = [...chatSlice.chats];
+    sortedChatsCopy.sort((a, b) => {
+      const dateA = new Date(b.lastMessage.time);
+      const dateB = new Date(a.lastMessage.time);
+      return dateA.getTime() - dateB.getTime();
+    });
+    setSortedChats(sortedChatsCopy);
+  }, [chatSlice.chats]);
 
   if (chatSlice.loading)
     return (
@@ -26,7 +38,7 @@ export default function ChatList({}) {
 
   return (
     <div className='flex w-full flex-col items-center justify-start divide-y overflow-y-scroll bg-slate-50 dark:divide-zinc-700 dark:bg-zinc-900'>
-      {chatSlice.chats.map((chat) => (
+      {sortedChats.map((chat) => (
         <ChatItem
           id={chat.id}
           key={chat.id}

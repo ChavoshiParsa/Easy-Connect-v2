@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useAppSelector } from '@/redux/store';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Icon from '../ui/Icon';
@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Avatar from '../ui/Avatar';
 import Loading from '../ui/Loading';
 import { formatTimeStatus } from './chat-screen/Message';
+import { AuthState } from '@/redux/auth-slice';
 
 export default function AllOtherUsers() {
   return (
@@ -18,17 +19,43 @@ export default function AllOtherUsers() {
 }
 
 function Modal() {
-  const credentials = useAppSelector(
-    (state) => state.usersReducer.usersCredentials
-  );
+  const credentials = useAppSelector((state) => state.usersReducer);
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
-  const loading = useAppSelector((state) => state.usersReducer.loading);
 
   const [sortType, setSortType] = useState<'name' | 'time'>('name');
+  const [sortedChats, setSortedChats] = useState<AuthState['credentials'][]>(
+    []
+  );
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const modal = searchParams.get('all-users');
+
+  useEffect(() => {
+    const sortedChatsCopy = [...credentials.usersCredentials];
+
+    if (sortType === 'time') {
+      sortedChatsCopy.sort((a, b) => {
+        const dateA = new Date(Number(a.lastSeen));
+        const dateB = new Date(Number(b.lastSeen));
+        return dateB.getTime() - dateA.getTime();
+      });
+      setSortedChats(sortedChatsCopy);
+    } else if (sortType === 'name') {
+      sortedChatsCopy.sort((a, b) => {
+        const firstNameA = a.firstName.toLowerCase();
+        const firstNameB = b.firstName.toLowerCase();
+        if (firstNameA < firstNameB) {
+          return -1;
+        }
+        if (firstNameA > firstNameB) {
+          return 1;
+        }
+        return 0;
+      });
+      setSortedChats(sortedChatsCopy);
+    }
+  }, [credentials.usersCredentials, sortType]);
 
   return (
     <>
@@ -56,13 +83,13 @@ function Modal() {
             </div>
             <div className='my-3 h-0.5 w-full rounded-lg bg-gradient-to-l from-pink-500 via-emerald-500 to-yellow-500' />
             <div className='flex w-full flex-col items-center justify-start overflow-y-scroll'>
-              {loading ? (
+              {credentials.loading ? (
                 <div className='my-8 flex flex-row items-center justify-center space-x-3'>
                   <Loading />
                 </div>
               ) : (
                 <>
-                  {credentials.map((user) => (
+                  {sortedChats.map((user) => (
                     <Link
                       className='flex w-full flex-row items-center justify-start space-x-4 rounded-xl p-3 hover:bg-indigo-100 dark:hover:bg-indigo-950'
                       href={'/home/' + user.id}
