@@ -5,10 +5,9 @@ import { useAppSelector } from '@/redux/store';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Icon from '../ui/Icon';
 import Link from 'next/link';
-import Avatar from '../ui/Avatar';
 import Loading from '../ui/Loading';
-import { formatTimeStatus } from './chat-screen/Message';
 import { AuthState } from '@/redux/auth-slice';
+import UserItem from './UserItem';
 
 export default function AllOtherUsers() {
   return (
@@ -90,33 +89,7 @@ function Modal() {
               ) : (
                 <>
                   {sortedChats.map((user) => (
-                    <Link
-                      className='flex w-full flex-row items-center justify-start space-x-4 rounded-xl p-3 hover:bg-indigo-100 dark:hover:bg-indigo-950'
-                      href={'/home/' + user.id}
-                      key={user.id}
-                    >
-                      <Avatar
-                        firstName={user.firstName}
-                        lastName={user.lastName}
-                        src={user.profileUrl}
-                        theme={user.theme}
-                        size={46}
-                      />
-                      <div className='flex flex-col items-start justify-center'>
-                        <h3 className='font-bold'>
-                          {user.firstName + ' ' + user.lastName}
-                        </h3>
-                        {user.isOnline ? (
-                          <span className='text-sm text-emerald-400'>
-                            online
-                          </span>
-                        ) : (
-                          <span className='text-sm text-slate-400'>
-                            {formatTimeStatus(user.lastSeen)}
-                          </span>
-                        )}
-                      </div>
-                    </Link>
+                    <UserItem key={user.id} {...user} />
                   ))}
                 </>
               )}

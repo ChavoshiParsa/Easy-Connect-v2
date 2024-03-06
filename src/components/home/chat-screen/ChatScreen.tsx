@@ -15,6 +15,7 @@ import { useAppSelector } from '@/redux/store';
 import { useParams } from 'next/navigation';
 import { useEffect } from 'react';
 import { socket } from '@/socket';
+import SearchResult from '../SearchResult';
 
 export default function ChatScreen() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
@@ -43,6 +44,7 @@ export default function ChatScreen() {
       dark:bg-zinc-800 md:flex md:w-2/5 md:border-r dark:md:border-r-zinc-950 lg:w-4/12 xl:w-2/5'
       >
         <AllOtherUsers />
+        <SearchResult />
         <Topbar />
         <SearchField />
         <ActiveUser />

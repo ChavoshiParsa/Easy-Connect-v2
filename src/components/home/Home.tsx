@@ -7,6 +7,7 @@ import ActiveUser from '@/components/home/ActiveUser';
 import ChatList from '@/components/home/chat/ChatList';
 import { useAppSelector } from '@/redux/store';
 import AllOtherUsers from './AllOtherUsers';
+import SearchResult from './SearchResult';
 
 export default function Home() {
   const isMenuOpen = useAppSelector((state) => state.uiReducer.isMenuOpen);
@@ -22,6 +23,7 @@ export default function Home() {
        dark:bg-zinc-800 md:w-2/5 md:border-r dark:md:border-r-zinc-950 lg:w-4/12 xl:w-2/5'
       >
         <AllOtherUsers />
+        <SearchResult />
         <Topbar />
         <SearchField />
         <ActiveUser />
