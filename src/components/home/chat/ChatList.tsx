@@ -2,21 +2,33 @@ import ChatItem, { ChatItemType } from './ChatItem';
 import Loading from '@/components/ui/Loading';
 import { useAppSelector } from '@/redux/store';
 import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function ChatList({}) {
   const chatSlice = useAppSelector((state) => state.contactsReducer);
   const [sortedChats, setSortedChats] = useState<ChatItemType[]>([]);
+  const pathname = usePathname();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const sortedChatsCopy = [...chatSlice.chats];
+
+    if (searchParams.get('unread-messages')) {
+      setSortedChats(
+        sortedChatsCopy.filter((contact) => contact.newMessages !== 0)
+      );
+      return;
+    }
+
     sortedChatsCopy.sort((a, b) => {
       const dateA = new Date(b.lastMessage.time);
       const dateB = new Date(a.lastMessage.time);
       return dateA.getTime() - dateB.getTime();
     });
     setSortedChats(sortedChatsCopy);
-  }, [chatSlice.chats]);
+  }, [chatSlice.chats, searchParams]);
 
   if (chatSlice.loading)
     return (
@@ -55,6 +67,20 @@ export default function ChatList({}) {
           isOnline={chat.isOnline}
         />
       ))}
+
+      {sortedChats.length === 0 && searchParams.get('unread-messages') && (
+        <span className='px-1 py-3 text-center'>
+          No new messages available at the moment.
+        </span>
+      )}
+      {searchParams.get('unread-messages') && (
+        <button
+          className='mb-4 rounded-md bg-slate-100 px-4 py-0.5 text-slate-900 hover:bg-indigo-400'
+          onClick={() => router.push(pathname)}
+        >
+          back
+        </button>
+      )}
     </div>
   );
 }

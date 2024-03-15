@@ -14,7 +14,6 @@ import { socket } from '@/socket';
 const SIZE = 20;
 
 export default function MenuList() {
-  const path = usePathname();
   const [isSettingOpen, setIsSettingOpen] = useState(true);
 
   const dispatch = useDispatch<AppDispatch>();
@@ -26,6 +25,7 @@ export default function MenuList() {
     (state) => state.authReducer.credentials.firstName
   );
 
+  const path = usePathname();
   const router = useRouter();
 
   async function logoutSubmitHandler(event: FormEvent<HTMLFormElement>) {
@@ -39,7 +39,7 @@ export default function MenuList() {
       })
     );
     dispatch(clearCredentials());
-    router.push('/sign-in');
+    router.push('/');
   }
 
   return (
@@ -63,30 +63,30 @@ export default function MenuList() {
           Home Page
         </span>
       </Link>
-      <Link
-        className='flex w-full items-center justify-start space-x-6 hover:bg-indigo-100 dark:hover:bg-indigo-950'
-        style={{
-          background: `${path === '/home/messages' && '#e9e5ffaa'}`,
-          borderRight: `${path === '/home/messages' && '#6A4DFF solid 3px'}`,
+      <div
+        className='flex w-full cursor-pointer items-center justify-start space-x-6 hover:bg-indigo-100 dark:hover:bg-indigo-950'
+        onClick={() => {
+          if (unreadMessages === 0) {
+            dispatch(
+              setNotification({
+                status: 'Warning',
+                message: "You don't have any new messages.",
+              })
+            );
+            return;
+          }
+          router.push('?unread-messages=true');
+          dispatch(setIsMenuOpen(false));
         }}
-        href='/home/messages'
-        onClick={() => setIsMenuOpen(false)}
       >
-        <Icon
-          name='messages'
-          size={SIZE}
-          color={`${path === '/home/messages' ? '#6A4DFF' : ''}`}
-          dark={isDark}
-        />
-        <span style={{ color: `${path === '/home/messages' && '#6A4DFF'}` }}>
-          Unread Messages
-        </span>
+        <Icon name='messages' size={SIZE} dark={isDark} />
+        <span>Unread Messages</span>
         {unreadMessages !== 0 && (
           <span className='flex h-5 w-5 items-center justify-center rounded-full bg-purlue text-xs text-white '>
             {unreadMessages}
           </span>
         )}
-      </Link>
+      </div>
       <div
         className='w-full space-y-4 hover:bg-indigo-100 dark:hover:bg-indigo-950'
         style={{

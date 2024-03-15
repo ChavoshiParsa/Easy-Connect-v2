@@ -1,28 +1,20 @@
-import Link from 'next/link';
+import Introduction from '@/components/landing/Introduction';
+import Navbar from '@/components/landing/Navbar';
+import { prisma } from '../../prisma/prisma';
 
-export default function IntroductionPage() {
+export default async function LandingPage() {
+  const userLength = await prisma.user.count();
+  const chatLength = await prisma.chat.count();
+  const messageLength = await prisma.message.count();
+
   return (
-    <main className='flex flex-col items-center justify-center'>
-      <div className='flex items-center justify-center space-x-2 self-end'>
-        <Link
-          className='rounded-md border-2 border-purlue px-3 py-1 text-lg'
-          href='/sign-up'
-        >
-          Get started
-        </Link>
-        <Link
-          className='rounded-md border-2 border-purlue px-3 py-1 text-lg'
-          href='/sign-in'
-        >
-          Sign in
-        </Link>
-      </div>
-      <Link
-        className='mt-32 rounded-lg bg-purlue px-6 py-3 text-center text-3xl text-slate-50'
-        href='/home'
-      >
-        Home Page
-      </Link>
+    <main className='flex h-full w-full flex-col items-center justify-start overflow-y-scroll bg-slate-100 px-4 dark:bg-zinc-900 xs:px-6 sm:px-8 md:px-10 lg:px-12  xl:px-14'>
+      <Navbar />
+      <Introduction
+        userLength={userLength}
+        chatLength={chatLength}
+        messageLength={messageLength}
+      />
     </main>
   );
 }

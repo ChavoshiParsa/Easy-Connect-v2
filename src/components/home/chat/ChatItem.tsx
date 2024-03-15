@@ -51,7 +51,7 @@ export default function ChatItem({
 
   return (
     <div
-      className='flex w-full items-center justify-between space-x-4 px-3 py-3 hover:bg-purple-50 dark:hover:bg-zinc-950'
+      className='flex w-full items-center justify-between space-x-4 px-3 py-3 hover:bg-slate-100 dark:hover:bg-zinc-950'
       onClick={goToChatHandler}
     >
       <Avatar
@@ -72,7 +72,7 @@ export default function ChatItem({
         <div className='flex w-full justify-between'>
           <span className='text-sm text-zinc-400'>{lastMessage.text}</span>
           {lastMessage.status ? (
-            <Icon name={lastMessage.status} size={22} color='#FFFFFF' />
+            <Icon name={lastMessage.status} size={22} color='#aaa' />
           ) : (
             <>
               {newMessages !== 0 && (
