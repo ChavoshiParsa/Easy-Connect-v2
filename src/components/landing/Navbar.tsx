@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 export default function Navbar() {
   return (
-    <header className='mb-2 w-full py-4 md:mb-4'>
+    <header className='mb-4 w-full py-3'>
       <nav className='flex w-full items-center justify-between whitespace-nowrap'>
         <Link
           className='flex items-center justify-center space-x-2 md:space-x-4'
@@ -11,7 +11,7 @@ export default function Navbar() {
         >
           <Image
             src='/images/logo.png'
-            className='size-12 md:size-16'
+            className='size-10 md:size-14'
             alt='logo of app'
             width={100}
             height={100}

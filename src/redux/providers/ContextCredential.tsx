@@ -179,5 +179,5 @@ export const ContextCredential: React.FC<{
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, messagesError, id]);
 
-  return <>{children}</>;
+  return <main className='fxStat'>{children}</main>;
 };

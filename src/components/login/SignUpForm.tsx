@@ -57,7 +57,7 @@ export default function SignUpForm() {
         />
       )}
       <form
-        className='flex h-full w-full items-center justify-center overflow-scroll bg-slate-50 p-1 dark:bg-zinc-900 md:p-3'
+        className='fxStat flex w-full items-center justify-center overflow-scroll bg-slate-50 p-1 dark:bg-zinc-900 md:p-3'
         onSubmit={formSubmitHandler}
         noValidate
       >
