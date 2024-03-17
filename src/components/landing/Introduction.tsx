@@ -25,13 +25,13 @@ export default function Introduction() {
 
   return (
     <section
-      className='mb-16 flex h-[700px] w-full flex-col items-center justify-center md:h-[600px] md:flex-row md:space-x-10'
+      className='z-10 flex h-full w-full flex-col items-center justify-center px-4 py-10 shadow-md xs:px-6 sm:px-8 md:h-[600px] md:flex-row md:space-x-10 md:px-10 lg:px-12 xl:px-14'
       id='hero'
     >
       <div className='mb-8 flex flex-col items-center justify-center space-y-8 md:mb-12 md:space-y-16'>
         <h1
-          className='w-full text-center text-4xl font-bold sm:text-5xl md:text-left lg:text-6xl '
-          style={{ lineHeight: 1.375 }}
+          className='w-full text-center text-3xl font-bold xs:text-4xl sm:text-5xl md:text-left lg:text-6xl '
+          style={{ lineHeight: 1.25 }}
         >
           Let&apos;s Connect with Your{' '}
           <span className='inline-block bg-gradient-to-r from-violet-500 to-indigo-400 bg-clip-text text-transparent '>
@@ -43,21 +43,21 @@ export default function Introduction() {
           <div className='flex flex-col items-center justify-center space-y-0.5 px-2 md:space-y-1 md:px-6'>
             <Icon name='user-intro' size={32} dark={isDark} />
             <span className='text-xl font-bold md:text-3xl'>
-              {info ? info.userLength : <Loading size={28} />}
+              {info ? info.userLength : '...'}
             </span>
             <span className='text-sm text-zinc-500'>Users</span>
           </div>
           <div className='flex flex-col items-center justify-center space-y-0.5 px-2 md:space-y-1 md:px-6'>
             <Icon name='chat-intro' size={32} dark={isDark} />
             <span className='text-xl font-bold md:text-3xl'>
-              {info ? info.chatLength : <Loading size={28} />}
+              {info ? info.chatLength : '...'}
             </span>
             <span className='text-sm text-zinc-500'>Connections</span>
           </div>
           <div className='flex flex-col items-center justify-center space-y-0.5 px-2 md:space-y-1 md:px-6'>
             <Icon name='message-intro' size={32} dark={isDark} />
             <span className='text-xl font-bold md:text-3xl'>
-              {info ? info.messageLength : <Loading size={28} />}
+              {info ? info.messageLength : '...'}
             </span>
             <span className='text-sm text-zinc-500'>Messages</span>
           </div>

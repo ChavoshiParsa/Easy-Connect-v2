@@ -1,11 +1,12 @@
 'use client';
 import { useAppSelector } from '@/redux/store';
 import Icon from '../ui/Icon';
+import Image from 'next/image';
 
 export default function Services() {
   return (
     <section
-      className='mb-20 flex w-full flex-col items-center justify-center space-y-16'
+      className='mb-20 flex w-full flex-col items-center justify-center space-y-16 bg-slate-200 px-3 py-10 dark:bg-zinc-800 xs:px-6 sm:px-8 md:px-10 lg:px-12 xl:px-14'
       id='services'
     >
       <h1 className='w-full text-center text-4xl font-bold md:text-5xl'>
@@ -31,6 +32,29 @@ export default function Services() {
           description='Empower innovation with open-source platform.'
         />
       </div>
+      <div className='relative flex min-h-[480px] w-full items-center justify-center overflow-hidden rounded-3xl'>
+        <Image
+          className='size-full object-cover'
+          src={`/images/coding2.jpg`}
+          alt={`image of chat app`}
+          fill
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          priority
+        />
+        <div className='absolute z-10 size-full bg-[#070707c6]' />
+        <div className='absolute z-20 flex size-full flex-col items-center justify-center space-y-8 px-8 text-center text-slate-100 md:px-36 md:py-24'>
+          <h1 className='flex items-center justify-center space-x-3 whitespace-nowrap text-2xl font-bold md:text-4xl'>
+            <span className='hidden md:block'>Behind the Chat,</span>
+            <span>A Team of Dedication</span>
+          </h1>
+          <p className='md:text-xl md:leading-loose'>
+            The hardworking chat app developers collaborate tirelessly, refining
+            features and enhancing user experience with relentless dedication
+            and innovation, surpassing expectations in digital communication.
+          </p>
+        </div>
+      </div>
+      <Icon name='star' color='#d58a44' size={80} />
     </section>
   );
 }
@@ -47,7 +71,7 @@ const ServiceBox = ({
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
 
   return (
-    <div className='flex w-full max-w-96 justify-center space-x-4 rounded-2xl bg-slate-50 p-5 drop-shadow lg:space-x-6'>
+    <div className='flex w-full max-w-96 justify-center space-x-4 rounded-2xl bg-slate-50 p-5 drop-shadow dark:bg-zinc-950 lg:space-x-6'>
       <div className='self-start'>
         <Icon name={icon} size={32} dark={isDark} />
       </div>

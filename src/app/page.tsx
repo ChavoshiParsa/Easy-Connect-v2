@@ -11,4 +11,3 @@ export default async function LandingPage() {
     </main>
   );
 }
-// px-4 xs:px-6 sm:px-8 md:px-10 lg:px-12 xl:px-14
