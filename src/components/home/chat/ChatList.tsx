@@ -3,9 +3,18 @@ import Loading from '@/components/ui/Loading';
 import { useAppSelector } from '@/redux/store';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
-export default function ChatList({}) {
+export default function ChatList() {
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <Suspense>
+      <ChatListSuspense />
+    </Suspense>
+  );
+}
+
+function ChatListSuspense({}) {
   const chatSlice = useAppSelector((state) => state.contactsReducer);
   const [sortedChats, setSortedChats] = useState<ChatItemType[]>([]);
   const pathname = usePathname();
