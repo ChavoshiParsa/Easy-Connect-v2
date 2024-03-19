@@ -5,7 +5,6 @@ import Icon from '../ui/Icon';
 import { useAppSelector } from '@/redux/store';
 import { useEffect, useState } from 'react';
 import { getLengths } from '@/actions/info-action';
-import Loading from '../ui/Loading';
 
 export default function Introduction() {
   const isDark = useAppSelector((state) => state.uiReducer.isDark);
@@ -25,7 +24,7 @@ export default function Introduction() {
 
   return (
     <section
-      className='z-10 flex h-full w-full flex-col items-center justify-center px-4 py-10 shadow-md xs:px-6 sm:px-8 md:h-[600px] md:flex-row md:space-x-10 md:px-10 lg:px-12 xl:px-14'
+      className='flex h-full w-full flex-col items-center justify-center px-4 py-10 xs:px-6 sm:px-8 md:h-[600px] md:flex-row md:space-x-10 md:px-10 lg:px-12 xl:px-14'
       id='hero'
     >
       <div className='mb-8 flex flex-col items-center justify-center space-y-8 md:mb-12 md:space-y-16'>

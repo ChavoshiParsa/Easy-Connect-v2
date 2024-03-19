@@ -1,3 +1,4 @@
+import Frameworks from '@/components/landing/Frameworks';
 import Introduction from '@/components/landing/Introduction';
 import Navbar from '@/components/landing/Navbar';
 import Services from '@/components/landing/Services';
@@ -8,6 +9,7 @@ export default async function LandingPage() {
       <Navbar />
       <Introduction />
       <Services />
+      <Frameworks />
     </main>
   );
 }

@@ -9,7 +9,7 @@ export default function Services() {
 
   return (
     <section
-      className='mb-20 flex w-full flex-col items-center justify-center space-y-16 bg-slate-200 px-3 py-20 dark:bg-zinc-800 xs:px-6 sm:px-8 md:px-10 lg:px-12 xl:px-14'
+      className='flex w-full flex-col items-center justify-center space-y-8 bg-slate-200 px-3 py-10 dark:bg-zinc-800 xs:px-6 sm:px-8 md:space-y-16 md:px-10 md:py-20 lg:px-12 xl:px-14'
       id='services'
     >
       <h1 className='w-full text-center text-4xl font-bold md:text-5xl'>
@@ -44,7 +44,7 @@ export default function Services() {
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
           priority
         />
-        <div className='absolute z-10 size-full bg-[#ffffff79] dark:bg-[#11111181]' />
+        <div className='absolute z-10 size-full bg-[#ffffffa2] dark:bg-[#111111ad]' />
         <div className='absolute z-20 flex size-full flex-col items-center justify-center space-y-8 px-2 text-center text-zinc-900 dark:text-slate-100 xs:px-8 md:px-36 md:py-24'>
           <h1 className='flex items-center justify-center space-x-3 whitespace-nowrap text-2xl font-bold md:text-4xl'>
             <span className='hidden md:block'>Behind the Chat,</span>

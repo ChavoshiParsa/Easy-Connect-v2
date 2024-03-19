@@ -26,7 +26,7 @@ export default function Icon({
         filter: `${filteredColor}`,
       }}
     >
-      <Image src={`/icons/${name}.svg`} alt='hamburger icon' fill />
+      <Image src={`/icons/${name}.svg`} alt={`${name} icon`} fill />
     </div>
   );
 }
