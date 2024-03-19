@@ -30,7 +30,7 @@ export default function ChatScreen() {
       await seenMessagesAction(params.contact);
     }
     seenMessageHandler();
-    socket.emit('seenMessage', params.contact);
+    socket.emit('seen', params.contact);
   }, [params.contact, messages]);
 
   return (

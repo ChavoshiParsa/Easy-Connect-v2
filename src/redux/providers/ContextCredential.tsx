@@ -40,10 +40,10 @@ export const ContextCredential: React.FC<{
       dispatch(seenMessagesContact(viewerId));
     }
 
-    socket.on('seenMessage', seenMessage);
+    socket.on('seen', seenMessage);
 
     return () => {
-      socket.off('seenMessage', seenMessage);
+      socket.off('seen', seenMessage);
     };
   }, [dispatch]);
 

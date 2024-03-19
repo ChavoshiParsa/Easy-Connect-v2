@@ -42,7 +42,7 @@ export default function ChatItem({
 
   function goToChatHandler() {
     router.push('/home/' + id);
-    socket.emit('seenMessage', id);
+    socket.emit('seen', id);
     if (chatNewMessages) {
       dispatch(readSomeUnreadMessages(chatNewMessages));
       dispatch(readUnreadMessages(id));
